@@ -12,4 +12,8 @@ app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
+const authRoutes = require("./api/routes/auth-routes");
+
+app.use("/api/auth", authRoutes);
+
 module.exports = app; 
