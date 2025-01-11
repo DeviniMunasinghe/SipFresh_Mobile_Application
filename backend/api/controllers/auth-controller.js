@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 // Register a new user (only user can register via form)
 exports.register = async (req, res) => {
@@ -40,3 +41,48 @@ exports.register = async (req, res) => {
   }
 };
 
+// Login for both users and admin
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ message: "Email and password are required" });
+  }
+
+  try {
+    // Check if user exists
+    const user = await User.findByEmail(email);
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid Password" });
+    }
+
+    console.log("User role from DB:", user.role);
+
+    // Create and return JWT token with role information
+    const token = jwt.sign(
+      //generates a JWT token using the user's id and role
+      { userId: user.user_id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    res.status(200).json({
+      token,
+      role: user.role,
+      message: user.role === "admin" ? "Admin logged in" : "User logged in",
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
