@@ -1,9 +1,45 @@
 const express = require("express");
 const authController = require("../controllers/auth-controller");
+const path = require("path");
+const multer = require("multer");
+
+const {
+    protect,
+    superAdminOnly,
+  } = require("../middlewares/auth-middleware");
 
 const router = express.Router();
 
+const userImagePath = path.resolve(__dirname, "../../images/user-image");
+console.log("Saving to:", userImagePath);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, userImagePath);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 //User registration
 router.post("/register", authController.register);
+
+//User/Admin login
+router.post("/login", authController.login);
+
+router.use("/images/user-image", express.static(userImagePath));
+
+//Admin creation(-super-admin-only route)
+router.post(
+    "/add-admin",
+    upload.single("user_image"),
+    protect,
+    superAdminOnly,
+    authController.addAdmin
+  );
 
 module.exports = router;
