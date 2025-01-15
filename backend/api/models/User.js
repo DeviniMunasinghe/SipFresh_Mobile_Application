@@ -28,6 +28,40 @@ class User {
       throw new Error("Error creating user: " + error.message);
     }
   }
+
+  // Create a new admin 
+  static async createAdmin(adminData) {
+    const {
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      phone_no,
+      address,
+      user_image,
+      role,
+    } = adminData;
+
+    try {
+      await db.execute(
+        "INSERT INTO user (first_name, last_name, username, email, password, phone_no, address, user_image, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          first_name || null,
+          last_name || null,
+          username || null,
+          email || null,
+          password || null,
+          phone_no || null,
+          address || null,
+          user_image || null,
+          role || null,
+        ]
+      );
+    } catch (error) {
+      throw new Error("Error creating admin: " + error.message);
+    }
+  }
 }
 
 module.exports = User;
