@@ -46,9 +46,7 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res
-      .status(400)
-      .json({ message: "Email and password are required" });
+    return res.status(400).json({ message: "Email and password are required" });
   }
 
   try {
@@ -83,6 +81,76 @@ exports.login = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+const checkMissingFields = (body, requiredFields) =>
+  requiredFields.filter((field) => !body[field]);
+
+// Add new admin (only admins can add another admin)
+exports.addAdmin = async (req, res) => {
+  console.log("Request Body:", req.body);
+  console.log("File:", req.file); // Log the file to verify if it's being uploaded
+
+  const {
+    first_name,
+    last_name,
+    username,
+    email,
+    password,
+    phone_no,
+    address,
+    role,
+  } = req.body;
+  const user_image = req.file
+    ? `/images/user-image/${req.file.filename}`
+    : null;
+
+  try {
+    // Check for missing fields
+    const missingFields = checkMissingFields(req.body, [
+      "first_name",
+      "last_name",
+      "username",
+      "email",
+      "password",
+      "role",
+    ]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: "Required fields are missing",
+        missingFields,
+      });
+    }
+
+    // Check if the admin already exists
+    const existingAdmin = await User.findByEmail(email);
+    if (existingAdmin) {
+      return res.status(400).json({ message: "Admin already exists" });
+    }
+
+    // Hash password for admin
+    const hashedPassword = await bcrypt.hash(password, 8);
+
+    // Create admin (role is 'admin')
+    const newAdmin = {
+      first_name: first_name || null,
+      last_name: last_name || null,
+      username: username || null,
+      email: email || null,
+      password: hashedPassword,
+      phone_no: phone_no || null,
+      address: address || null,
+      role: role || null,
+      user_image,
+    };
+
+    await User.createAdmin(newAdmin);
+
+    res.status(201).json({ message: "Admin created successfully" });
+  } catch (error) {
+    console.error("Add admin error:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
