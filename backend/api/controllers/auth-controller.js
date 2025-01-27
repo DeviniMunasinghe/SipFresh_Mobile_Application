@@ -154,3 +154,20 @@ exports.addAdmin = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+//Fetch all admins
+exports.getAllAdmins = async (req, res) => {
+  try {
+    const admins = await User.findAllAdmins();
+    res.status(200).json({
+      status: "success",
+      data: admins,
+    });
+  } catch (error) {
+    console.error("Error fetching admins:", error);
+    res.status(500).json({
+      message: "server error",
+      error: error.message,
+    });
+  }
+};
