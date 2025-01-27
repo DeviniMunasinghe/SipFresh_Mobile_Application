@@ -51,3 +51,13 @@ exports.superAdminOnly = (req, res, next) => {
   }
   next();
 };
+
+// Middleware to allow access for admin and super admin
+exports.adminOrSuperAdmin = (req, res, next) => {
+  if (req.user.role !== "admin" && req.user.role !== "super admin") {
+    return res.status(403).json({
+      message: "Access denied, admins or super admins only",
+    });
+  }
+  next();
+};
