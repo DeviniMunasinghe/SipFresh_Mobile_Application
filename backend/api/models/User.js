@@ -62,6 +62,21 @@ class User {
       throw new Error("Error creating admin: " + error.message);
     }
   }
+
+    //Get all admins to the admin profiles page
+    static async findAllAdmins() {
+      try {
+        const [results] = await db.execute(
+          "SELECT * FROM user WHERE role IN (?,?) AND is_deleted = 0",
+          ["admin", "super admin"]
+        );
+  
+        return results;
+      } catch (error) {
+        throw new Error("Error fetching admins:" + error.message);
+      }
+    }
+  
 }
 
 module.exports = User;
