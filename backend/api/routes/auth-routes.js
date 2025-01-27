@@ -4,10 +4,10 @@ const path = require("path");
 const multer = require("multer");
 
 const {
-    protect,
-    superAdminOnly,
-    adminOrSuperAdmin,
-  } = require("../middlewares/auth-middleware");
+  protect,
+  superAdminOnly,
+  adminOrSuperAdmin,
+} = require("../middlewares/auth-middleware");
 
 const router = express.Router();
 
@@ -36,14 +36,22 @@ router.use("/images/user-image", express.static(userImagePath));
 
 //Admin creation(-super-admin-only route)
 router.post(
-    "/add-admin",
-    upload.single("user_image"),
-    protect,
-    superAdminOnly,
-    authController.addAdmin
-  );
+  "/add-admin",
+  upload.single("user_image"),
+  protect,
+  superAdminOnly,
+  authController.addAdmin
+);
 
-  //Get all admins
+//Get all admins
 router.get("/admins", protect, adminOrSuperAdmin, authController.getAllAdmins);
+
+//Delete an admin by Id
+router.delete(
+  "/admins/:user_id",
+  protect,
+  superAdminOnly,
+  authController.deleteAdmin
+);
 
 module.exports = router;
