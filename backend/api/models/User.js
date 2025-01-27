@@ -29,7 +29,7 @@ class User {
     }
   }
 
-  // Create a new admin 
+  // Create a new admin
   static async createAdmin(adminData) {
     const {
       first_name,
@@ -63,20 +63,30 @@ class User {
     }
   }
 
-    //Get all admins to the admin profiles page
-    static async findAllAdmins() {
-      try {
-        const [results] = await db.execute(
-          "SELECT * FROM user WHERE role IN (?,?) AND is_deleted = 0",
-          ["admin", "super admin"]
-        );
-  
-        return results;
-      } catch (error) {
-        throw new Error("Error fetching admins:" + error.message);
-      }
+  //Get all admins to the admin profiles page
+  static async findAllAdmins() {
+    try {
+      const [results] = await db.execute(
+        "SELECT * FROM user WHERE role IN (?,?) AND is_deleted = 0",
+        ["admin", "super admin"]
+      );
+
+      return results;
+    } catch (error) {
+      throw new Error("Error fetching admins:" + error.message);
     }
-  
+  }
+
+  //Delete admin by Id
+  static async deleteById(adminId) {
+    try {
+      await db.execute("UPDATE user SET is_deleted = 1 WHERE user_id = ?", [
+        adminId,
+      ]);
+    } catch (error) {
+      throw new Error("Error deleting the admin:" + error.message);
+    }
+  }
 }
 
 module.exports = User;
