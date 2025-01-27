@@ -6,6 +6,7 @@ const multer = require("multer");
 const {
     protect,
     superAdminOnly,
+    adminOrSuperAdmin,
   } = require("../middlewares/auth-middleware");
 
 const router = express.Router();
@@ -41,5 +42,8 @@ router.post(
     superAdminOnly,
     authController.addAdmin
   );
+
+  //Get all admins
+router.get("/admins", protect, adminOrSuperAdmin, authController.getAllAdmins);
 
 module.exports = router;
