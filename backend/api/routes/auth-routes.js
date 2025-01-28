@@ -54,4 +54,6 @@ router.delete(
   authController.deleteAdmin
 );
 
+// Fetch all registered users (only accessible to admins and super-admins)
+router.get("/users", protect, adminOrSuperAdmin, authController.getAllUsers);
 module.exports = router;
