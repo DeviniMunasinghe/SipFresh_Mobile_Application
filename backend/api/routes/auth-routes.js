@@ -32,6 +32,9 @@ router.post("/register", authController.register);
 //User/Admin login
 router.post("/login", authController.login);
 
+//User/Admin login
+router.post("/login", authController.login);
+
 router.use("/images/user-image", express.static(userImagePath));
 
 //Admin creation(-super-admin-only route)
