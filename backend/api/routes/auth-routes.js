@@ -1,7 +1,30 @@
 const express = require("express");
 const authController = require("../controllers/auth-controller");
+const path = require("path");
+const multer = require("multer");
 
-const router = express.Router(); 
+const {
+  protect,
+  superAdminOnly,
+  adminOrSuperAdmin,
+} = require("../middlewares/auth-middleware");
+
+const router = express.Router();
+
+const userImagePath = path.resolve(__dirname, "../../images/user-image");
+console.log("Saving to:", userImagePath);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, userImagePath);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 //User registration
 router.post("/register", authController.register);
@@ -9,4 +32,31 @@ router.post("/register", authController.register);
 //User/Admin login
 router.post("/login", authController.login);
 
+//User/Admin login
+router.post("/login", authController.login);
+
+router.use("/images/user-image", express.static(userImagePath));
+
+//Admin creation(-super-admin-only route)
+router.post(
+  "/add-admin",
+  upload.single("user_image"),
+  protect,
+  superAdminOnly,
+  authController.addAdmin
+);
+
+//Get all admins
+router.get("/admins", protect, adminOrSuperAdmin, authController.getAllAdmins);
+
+//Delete an admin by Id
+router.delete(
+  "/admins/:user_id",
+  protect,
+  superAdminOnly,
+  authController.deleteAdmin
+);
+
+// Fetch all registered users (only accessible to admins and super-admins)
+router.get("/users", protect, adminOrSuperAdmin, authController.getAllUsers);
 module.exports = router;
