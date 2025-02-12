@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'cart_screen.dart';
+import 'order_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,14 +10,29 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Home Page")),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CartScreen()),
-            );
-          },
-          child: const Text("Go to Cart"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CartScreen()),
+                );
+              },
+              child: const Text("Go to Cart"),
+            ),
+            const SizedBox(height: 10), // Add spacing between buttons
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const OrderDetailsScreen()),
+                );
+              },
+              child: const Text("Go to Order Details"),
+            ),
+          ],
         ),
       ),
     );
