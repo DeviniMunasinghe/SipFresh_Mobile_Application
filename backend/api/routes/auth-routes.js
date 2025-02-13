@@ -7,7 +7,7 @@ const {
   protect,
   superAdminOnly,
   adminOrSuperAdmin,
-} = require("../middlewares/auth-middleware");
+} = require("../middleware/auth-middleware");
 
 const router = express.Router();
 
@@ -28,9 +28,6 @@ const upload = multer({ storage: storage });
 
 //User registration
 router.post("/register", authController.register);
-
-//User/Admin login
-router.post("/login", authController.login);
 
 //User/Admin login
 router.post("/login", authController.login);
