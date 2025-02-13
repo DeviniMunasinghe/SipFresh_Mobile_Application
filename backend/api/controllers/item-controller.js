@@ -39,4 +39,29 @@ exports.addItem = async (req, res) => {
   }
 };
 
+//get all items based on category(pizza,cake,beverage)
+exports.getItemsByCategory = async (req, res) => {
+  const { category_name } = req.params;
 
+  try {
+    //Find category by name
+    const category = await Category.findByName(category_name);
+
+    if (!category) {
+      return res.status(404).json({
+        message: "Category not found",
+      });
+    }
+
+    //fetch items by category_id
+    const items = await Item.findByCategory(category.category_id);
+
+    res.status(200).json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
