@@ -24,4 +24,7 @@ router.use("/images/menu", express.static(menuPath));
 
 router.post("/add-item", upload.single("item_image"), itemController.addItem);
 
+//Fetch items by category
+router.get("/category/:category_name", itemController.getItemsByCategory);
+
 module.exports = router;
