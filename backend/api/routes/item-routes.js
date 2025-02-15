@@ -27,4 +27,7 @@ router.post("/add-item", upload.single("item_image"), itemController.addItem);
 //Fetch items by category
 router.get("/category/:category_name", itemController.getItemsByCategory);
 
+// Fetch all items
+router.get("/get_all", protect, adminOrSuperAdmin, itemController.getAllItems);
+
 module.exports = router;
