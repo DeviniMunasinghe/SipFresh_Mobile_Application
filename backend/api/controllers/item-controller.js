@@ -65,3 +65,17 @@ exports.getItemsByCategory = async (req, res) => {
     });
   }
 };
+
+//Get all items for admin (excluding deleted ones)
+exports.getAllItems = async (req, res) => {
+  try {
+    const items = await Item.findAll();
+    res.status(200).json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({
+      message: "server error",
+      error: error.message,
+    });
+  }
+};
