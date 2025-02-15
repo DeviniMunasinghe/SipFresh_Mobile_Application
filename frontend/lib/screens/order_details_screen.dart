@@ -10,7 +10,6 @@ class OrderDetailsScreen extends StatefulWidget {
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
 }
 
-
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   // Boolean variable to track if the user wants to save the address
   bool saveAddress = false;
