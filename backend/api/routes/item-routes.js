@@ -30,4 +30,7 @@ router.get("/category/:category_name", itemController.getItemsByCategory);
 // Fetch all items
 router.get("/get_all", protect, adminOrSuperAdmin, itemController.getAllItems);
 
+// Fetch a single item by its ID
+router.get("/:item_id", protect, itemController.getItemById);
+
 module.exports = router;
