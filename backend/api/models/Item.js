@@ -40,6 +40,19 @@ class Item {
       throw new Error("Error fetching items: " + error.message);
     }
   }
+
+  // Fetch a single item by its ID(excluding soft deleted items)
+  static async findById(item_id) {
+    try {
+      const [result] = await db.execute(
+        "SELECT * FROM item WHERE item_id = ? AND is_deleted = 0",
+        [item_id]
+      );
+      return result.length > 0 ? result[0] : null; // Return the item or null if not found
+    } catch (error) {
+      throw new Error("Error fetching item: " + error.message);
+    }
+  }
 }
 
 module.exports = Item;
