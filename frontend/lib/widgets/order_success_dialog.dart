@@ -5,9 +5,13 @@ class OrderSuccessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: const Text('Order Success Dialog'),
+    return Center(
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: const Text('Order Success Dialog'),
+      ),
     );
   }
+  
 }
+
