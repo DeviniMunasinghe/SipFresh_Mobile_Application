@@ -5,13 +5,28 @@ class OrderSuccessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: const Text('Order Success Dialog'),
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+
+        child: Column(
+       
+          children: const [
+            Text('Your order was successful'),
+        
+            SizedBox(
+              width: 200.0,
+              height: 300.0,
+              child: Card(child: Text('You will get order within few hours')),
+              
+            ),
+          ],
+        ),
       ),
+
+
+
+
     );
   }
-  
 }
-
