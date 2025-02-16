@@ -79,3 +79,26 @@ exports.getAllItems = async (req, res) => {
     });
   }
 };
+
+// Fetch a single item by its ID
+exports.getItemById = async (req, res) => {
+  const { item_id } = req.params; // Get item ID from the request parameters
+
+  try {
+    const item = await Item.findById(item_id); // Fetch the item using the model
+
+    if (!item) {
+      return res.status(404).json({
+        message: "Item not found",
+      });
+    }
+
+    res.status(200).json(item);
+  } catch (error) {
+    console.error("Error fetching item:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
