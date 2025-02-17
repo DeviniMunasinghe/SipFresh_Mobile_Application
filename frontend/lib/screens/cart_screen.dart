@@ -17,12 +17,12 @@ class _CartScreenState extends State<CartScreen> {
         name: "Orange Juice",
         price: 299.43,
         quantity: 1,
-        imageUrl: "https://via.placeholder.com/60"),
+        imageUrl: "assets/images/juice1.png"),
     CartItem(
         name: "Apple",
         price: 150.99,
         quantity: 2,
-        imageUrl: "https://via.placeholder.com/60"),
+        imageUrl: "assets/images/juice2.png"),
   ];
 
   // Function to remove an item
