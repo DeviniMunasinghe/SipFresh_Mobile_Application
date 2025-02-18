@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'cart_screen.dart';
 import 'order_details_screen.dart';
+import 'category.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -34,6 +35,19 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text("Go to Order Details"), // Button text
             ),
+
+             const SizedBox(height: 10), // Add spacing between buttons
+            ElevatedButton(
+              onPressed: () {
+                // Navigates to the JuiceCategoryPage when the button is pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => JuiceCategoryPage()),
+                );
+              },
+              child: const Text("View Juice Categories"), // Button text
+            ),
+
           ],
         ),
       ),
