@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class JuiceCategoryPage extends StatelessWidget {
   final List<Map<String, String>> juiceCategories = [
-    {"name": "Orange Juice", "image": "assets/orange_juice.png"},
-    {"name": "Apple Juice", "image": "assets/apple_juice.png"},
-    {"name": "Mango Juice", "image": "assets/mango_juice.png"},
-    {"name": "Pineapple Juice", "image": "assets/pineapple_juice.png"},
+    {"name": "Orange Juice", "image": "assets/images/juice1.png"},
+    {"name": "Apple Juice", "image": "assets/images/juice2.png"},
+    {"name": "Mango Juice", "image": "assets/images/juice1.png"},
+    {"name": "Pineapple Juice", "image": "assets/images/juice2.png"},
+     {"name": "guava Juice", "image": "assets/images/juice1.png"},
+    {"name": "watermelon Juice", "image": "assets/images/juice2.png"},
   ];
 
   @override
@@ -65,6 +68,7 @@ class JuiceCategoryPage extends StatelessWidget {
           },
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
