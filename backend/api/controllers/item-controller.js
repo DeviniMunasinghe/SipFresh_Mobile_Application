@@ -102,3 +102,60 @@ exports.getItemById = async (req, res) => {
     });
   }
 };
+
+// Update an Item
+exports.updateItem = async (req, res) => {
+  const { item_id } = req.params;
+  const { item_name, item_description, item_price, category_name } = req.body;
+  let item_image = req.file ? `/images/menu/${req.file.filename}` : null;
+
+  try {
+    // Find the category by name
+    const category = await Category.findByName(category_name);
+    if (!category) {
+      return res.status(400).json({
+        message: "Invalid category",
+      });
+    }
+
+    //Fetch current item details from the DB
+    const currentItem = await Item.findById(item_id);
+    if (!currentItem) {
+      return res.status(404).json({
+        message: "Item not found",
+      });
+    }
+
+    // If no new image uploaded, retain the existing one
+    if (!item_image) {
+      item_image = currentItem.item_image;
+    }
+
+    // Prepare the item data, ensuring undefined values are converted to null
+    const itemData = {
+      item_name: item_name !== undefined ? item_name : null,
+      item_image: item_image !== undefined ? item_image : null,
+      item_description:
+        item_description !== undefined ? item_description : null,
+      item_price: item_price !== undefined ? item_price : null,
+      category_id: category.category_id,
+    };
+
+    // Debugging: Log itemData before updating
+    console.log("Item data for update:", itemData);
+
+    // Update the item in the database
+    await Item.update(item_id, itemData);
+
+    res.status(200).json({
+      message: "Item updated successfully",
+      item: itemData,
+    });
+  } catch (error) {
+    console.error("Error Updating item:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
