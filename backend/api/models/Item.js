@@ -53,6 +53,36 @@ class Item {
       throw new Error("Error fetching item: " + error.message);
     }
   }
+
+  // Update an item (handle undefined values explicitly)
+  static async update(item_id, itemData) {
+    const { item_name, item_description, item_price, item_image, category_id } =
+      itemData;
+
+    try {
+      const query = `
+              UPDATE item
+              SET
+                  item_name = COALESCE(?, item_name),
+                  item_description = COALESCE(?, item_description),
+                  item_price = COALESCE(?, item_price),
+                  category_id = COALESCE(?, category_id),
+                  item_image = COALESCE(?, item_image)
+              WHERE item_id = ? AND is_deleted = 0
+          `;
+
+      await db.execute(query, [
+        item_name !== undefined ? item_name : null,
+        item_description !== undefined ? item_description : null,
+        item_price !== undefined ? item_price : null,
+        category_id !== undefined ? category_id : null,
+        item_image !== undefined ? item_image : null,
+        item_id,
+      ]);
+    } catch (error) {
+      throw new Error("Error updating item: " + error.message);
+    }
+  }
 }
 
 module.exports = Item;
