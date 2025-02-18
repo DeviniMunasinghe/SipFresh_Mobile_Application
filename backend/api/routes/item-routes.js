@@ -33,4 +33,13 @@ router.get("/get_all", protect, adminOrSuperAdmin, itemController.getAllItems);
 // Fetch a single item by its ID
 router.get("/:item_id", protect, itemController.getItemById);
 
+// Update an item (with image upload)
+router.put(
+  "/:item_id",
+  upload.single("item_image"),
+  protect,
+  adminOrSuperAdmin,
+  itemController.updateItem
+);
+
 module.exports = router;
