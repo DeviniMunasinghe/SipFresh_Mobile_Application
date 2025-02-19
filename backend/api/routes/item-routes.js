@@ -42,4 +42,12 @@ router.put(
   itemController.updateItem
 );
 
+// Delete an item (soft delete)
+router.delete(
+  "/:item_id",
+  protect,
+  adminOrSuperAdmin,
+  itemController.deleteItem
+);
+
 module.exports = router;
