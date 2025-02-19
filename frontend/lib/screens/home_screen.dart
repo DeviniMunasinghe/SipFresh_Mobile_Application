@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'cart_screen.dart';
 import 'order_details_screen.dart';
 import 'category.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -51,6 +52,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+       bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

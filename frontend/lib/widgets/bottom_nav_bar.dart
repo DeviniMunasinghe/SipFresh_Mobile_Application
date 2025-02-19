@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/cart_screen.dart';
-import '../screens/order_details_screen.dart';
+import '../screens/category.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -16,9 +16,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   // List of pages for navigation
   final List<Widget> _pages = [
     const HomeScreen(),
-    const OrderDetailsScreen(), // If this is your "Categories" page, update the name accordingly
+     JuiceCategoryPage(), // Change to the correct screen
     const CartScreen(),
-    const Placeholder(), // Replace this with ProfileScreen when created
+
   ];
 
   void _onItemTapped(int index) {
@@ -34,7 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Categories"), // If this is for order details, update the label
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Categories"),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
