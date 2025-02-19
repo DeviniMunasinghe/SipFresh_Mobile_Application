@@ -159,3 +159,21 @@ exports.updateItem = async (req, res) => {
     });
   }
 };
+
+//Soft delete an item
+exports.deleteItem = async (req, res) => {
+  const { item_id } = req.params;
+
+  try {
+    await Item.softDelete(item_id);
+    res.status(200).json({
+      message: "Item deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
