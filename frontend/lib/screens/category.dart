@@ -68,7 +68,7 @@ class JuiceCategoryPage extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(),
+
     );
   }
 }
