@@ -83,6 +83,17 @@ class Item {
       throw new Error("Error updating item: " + error.message);
     }
   }
+
+  //Soft delete an item
+  static async softDelete(item_id) {
+    try {
+      await db.execute("UPDATE item SET is_deleted=1 WHERE item_id=?", [
+        item_id,
+      ]);
+    } catch (error) {
+      throw new Error("Error deleting item:" + error.message);
+    }
+  }
 }
 
 module.exports = Item;
