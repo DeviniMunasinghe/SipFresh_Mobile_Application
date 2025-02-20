@@ -92,7 +92,7 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: _showOrderSuccessDialog,
-                    child: const Text("Place Order"),
+                    child: const Text("Checkout"),
                   ),
                 ),
               ],
