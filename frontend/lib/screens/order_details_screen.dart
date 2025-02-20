@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_text_field.dart';
-import '../widgets/bottom_nav_bar.dart';
+
 
 // Stateful widget for the Order Details screen
 class OrderDetailsScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(), // Custom bottom navigation bar
+     
     );
   }
 }
