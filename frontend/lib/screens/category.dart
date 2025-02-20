@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import '../widgets/bottom_nav_bar.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
+import '../models/cart_item.dart';
 
 class JuiceCategoryPage extends StatelessWidget {
-  final List<Map<String, String>> juiceCategories = [
-    {"name": "Orange Juice", "image": "assets/images/juice1.png"},
-    {"name": "Apple Juice", "image": "assets/images/juice2.png"},
-    {"name": "Mango Juice", "image": "assets/images/juice1.png"},
-    {"name": "Pineapple Juice", "image": "assets/images/juice2.png"},
-     {"name": "guava Juice", "image": "assets/images/juice1.png"},
-    {"name": "watermelon Juice", "image": "assets/images/juice2.png"},
+  final List<Map<String, dynamic>> juiceCategories = [
+    {"name": "Orange Juice", "image": "assets/images/juice1.png", "price": 299.43},
+    {"name": "Apple Juice", "image": "assets/images/juice2.png", "price": 150.99},
+    {"name": "Mango Juice", "image": "assets/images/juice1.png", "price": 320.00},
+    {"name": "Pineapple Juice", "image": "assets/images/juice2.png", "price": 275.00},
+    {"name": "Guava Juice", "image": "assets/images/juice1.png", "price": 250.00},
+    {"name": "Watermelon Juice", "image": "assets/images/juice2.png", "price": 180.00},
   ];
 
   @override
@@ -22,7 +24,7 @@ class JuiceCategoryPage extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 items per row
+            crossAxisCount: 2,
             childAspectRatio: 0.8,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
@@ -48,14 +50,25 @@ class JuiceCategoryPage extends StatelessWidget {
                     juiceCategories[index]["name"]!,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
+                  Text(
+                    "\$${juiceCategories[index]["price"].toStringAsFixed(2)}",
+                    style: TextStyle(fontSize: 14, color: Colors.green),
+                  ),
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      // Add your cart logic here
+                      Provider.of<CartProvider>(context, listen: false).addToCart(
+                        CartItem(
+                          name: juiceCategories[index]["name"]!,
+                          price: juiceCategories[index]["price"],
+                          quantity: 1,
+                          imageUrl: juiceCategories[index]["image"]!,
+                        ),
+                      );
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                              "${juiceCategories[index]['name']} added to cart!"),
+                          content: Text("${juiceCategories[index]['name']} added to cart!"),
                           duration: Duration(seconds: 1),
                         ),
                       );
@@ -68,7 +81,6 @@ class JuiceCategoryPage extends StatelessWidget {
           },
         ),
       ),
-
     );
   }
 }
