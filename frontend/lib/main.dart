@@ -4,13 +4,14 @@ import 'providers/cart_provider.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
-      MultiProvider(
+  runApp(
+    MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
-      child: const MyApp(),
+      child: const MyApp(), // MyApp should be wrapped inside MultiProvider
     ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(), 
+      home: const HomeScreen(), 
     );
   }
 }
