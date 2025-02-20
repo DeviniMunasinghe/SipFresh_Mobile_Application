@@ -16,9 +16,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
   // List of pages for navigation
   final List<Widget> _pages = [
     const HomeScreen(),
-     JuiceCategoryPage(), // Change to the correct screen
+    JuiceCategoryPage(),
     const CartScreen(),
-
+    const Center(child: Text("Profile Page")), // Placeholder for Profile
   ];
 
   void _onItemTapped(int index) {
@@ -30,7 +30,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex], // Display selected screen
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages, // Keep state of pages
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),

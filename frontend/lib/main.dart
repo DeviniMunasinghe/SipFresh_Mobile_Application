@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
-import 'screens/home_screen.dart';
+import 'widgets/bottom_nav_bar.dart'; // Import BottomNavBar
 
 void main() {
   runApp(
@@ -9,7 +9,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
-      child: const MyApp(), // MyApp should be wrapped inside MultiProvider
+      child: const MyApp(),
     ),
   );
 }
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomeScreen(), 
+      home: const BottomNavBar(), // Set BottomNavBar as the main layout
     );
   }
 }
