@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/cart_item_widget.dart';
+import '../widgets/order_summary.dart'; // Import the OrderSummary widget
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -9,6 +10,13 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+
+    // Calculate values for OrderSummary
+    double subtotal = cartProvider.getSubtotal();
+    int totalItems = cartProvider.getTotalItems();
+    double shippingCharges = 200.0; // Set your fixed or dynamic shipping charge
+    double discount = cartProvider.getDiscount(); // Assume your provider calculates it
+    double total = subtotal + shippingCharges - discount;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +44,14 @@ class CartScreen extends StatelessWidget {
                     },
                   ),
                 ),
+                // Add the Order Summary section
+                OrderSummary(
+                  subtotal: subtotal,
+                  totalItems: totalItems,
+                  shippingCharges: shippingCharges,
+                  discount: discount,
+                  total: total,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
@@ -44,12 +60,12 @@ class CartScreen extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text("Order Successful"),
-                          content: Text("Your order has been placed!"),
+                          title: const Text("Order Successful"),
+                          content: const Text("Your order has been placed!"),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: Text("OK"),
+                              child: const Text("OK"),
                             ),
                           ],
                         ),
