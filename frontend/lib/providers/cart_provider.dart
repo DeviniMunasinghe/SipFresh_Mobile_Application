@@ -7,7 +7,6 @@ class CartProvider extends ChangeNotifier {
   List<CartItem> get cartItems => _cartItems;
 
   void addToCart(CartItem item) {
-    // Check if the item is already in the cart
     int index = _cartItems.indexWhere((cartItem) => cartItem.name == item.name);
     if (index != -1) {
       _cartItems[index] = _cartItems[index].copyWith(
@@ -17,7 +16,7 @@ class CartProvider extends ChangeNotifier {
       _cartItems.add(item);
     }
 
-    notifyListeners(); // Notify widgets to update
+    notifyListeners();
   }
 
   void removeFromCart(int index) {
@@ -41,5 +40,20 @@ class CartProvider extends ChangeNotifier {
       removeFromCart(index);
     }
     notifyListeners();
+  }
+
+  //  Method to calculate the subtotal
+  double getSubtotal() {
+    return _cartItems.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+  }
+
+  //  Method to get total number of items
+  int getTotalItems() {
+    return _cartItems.fold(0, (sum, item) => sum + item.quantity);
+  }
+
+  // Method to calculate discount (Modify based on your logic)
+  double getDiscount() {
+    return getSubtotal() * 0.1; // Example: 10% discount
   }
 }
