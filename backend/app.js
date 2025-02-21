@@ -32,8 +32,10 @@ app.get('/', (req, res) => {
 
 const authRoutes = require("./api/routes/auth-routes");
 const itemRoutes = require("./api/routes/item-routes");
+const cartRoutes = require("./api/routes/cart-routes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
+app.use("/api/cart",cartRoutes);
 
 module.exports = app; 
