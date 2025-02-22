@@ -13,6 +13,19 @@ class Cart {
       throw new Error("Error creating cart: " + error.message);
     }
   }
+
+  // Fetch cart by user ID
+  static async getCartByUserId(userId) {
+    try {
+      const [result] = await db.execute(
+        "SELECT * FROM cart WHERE user_id = ?",
+        [userId]
+      );
+      return result.length ? result[0] : null; // If there's a cart, return the first one
+    } catch (error) {
+      throw new Error("Error fetching cart by user ID: " + error.message);
+    }
+  }
 }
 
 module.exports = Cart;
