@@ -72,3 +72,31 @@ exports.addItemToCart = async (req, res) => {
       .json({ message: "Failed to add item to cart", error: error.message });
   }
 };
+
+// Get all items in the user's cart
+exports.getCartItems = async (req, res) => {
+  try {
+    const userId = req.user.user_id;
+    console.log("Fetching cart items for userId:", userId);
+
+    // Fetch the cart items from the database for the user
+    const cart = await Cart.getCartByUserId(userId);
+    console.log("Cart found:", cart);
+
+    if (!cart) {
+      return res.status(404).json({ message: "No Cart found this user" });
+    }
+
+    const cartItems = await CartItem.getItemsByCartId(cart.cart_id);
+
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(404).json({ message: "No items in cart" });
+    }
+
+    // Send the cart items in the response
+    res.status(200).json({ items: cartItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
