@@ -12,4 +12,7 @@ router.get("/get-all", protect, cartController.getCartItems);
 // Remove an item from the cart (Protected)
 router.delete("/delete/:cartItemId", protect, cartController.deleteCartItem);
 
+// Update the quantity of a cart item (Protected)
+router.put("/update/:cartItemId", protect, cartController.updateCartItem);
+
 module.exports = router;
