@@ -10,4 +10,11 @@ router.post(
   orderController.transferSelectedItemsToCheckout
 );
 
+//route to fetch selected items in checkout
+router.get(
+  "/checkout/selected-items",
+  protect,
+  orderController.getSelectedItemsInCheckout
+);
+
 module.exports = router;
