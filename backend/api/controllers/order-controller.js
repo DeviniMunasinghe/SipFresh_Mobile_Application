@@ -58,3 +58,29 @@ exports.transferSelectedItemsToCheckout = async (req, res) => {
       .json({ error: "Failed to transfer selected items to checkout" });
   }
 };
+
+// Fetch selected items in checkout
+exports.getSelectedItemsInCheckout = async (req, res) => {
+  const userId = req.user.user_id;
+  try {
+    const [selectedItems] = await db.execute(
+      `SELECT ci.*, itm.item_name, itm.item_price, itm.item_image 
+       FROM cart_items ci 
+       JOIN cart c ON ci.cart_id = c.cart_id 
+       JOIN item itm ON ci.item_id = itm.item_id 
+       WHERE c.user_id = ? AND ci.is_deleted = 0 AND ci.selected = 1`,
+      [userId]
+    );
+
+    if (selectedItems.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "No selected items found in checkout." });
+    }
+
+    res.json({ items: selectedItems });
+  } catch (error) {
+    console.error("Error fetching selected items in checkout:", error);
+    res.status(500).json({ error: "Failed to fetch selected items." });
+  }
+};
