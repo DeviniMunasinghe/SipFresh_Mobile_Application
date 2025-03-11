@@ -84,3 +84,57 @@ exports.getSelectedItemsInCheckout = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch selected items." });
   }
 };
+
+// Remove selected items from checkout and return them to the cart as unselected
+exports.removeItemsFromCheckout = async (req, res) => {
+  const selectedCartItemId = req.params.selectedCartItemId;
+
+  const userId = req.user.user_id;
+
+  // Validate input
+  if (!selectedCartItemId) {
+    return res
+      .status(400)
+      .json({ message: "No item provided for removal from checkout." });
+  }
+
+  try {
+    console.log(
+      "Removing item from checkout:",
+      selectedCartItemId,
+      "for user ID:",
+      userId
+    );
+
+    // Update the `selected` status of the items to `0` (unselected)
+    const query = `
+      UPDATE cart_items
+      SET selected = 0
+      WHERE cart_item_id =?
+        AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = ?)
+        AND selected = 1
+    `;
+
+    const [result] = await db.execute(query, [selectedCartItemId, userId]);
+
+    // Check if any rows were affected (i.e., items were actually updated)
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ message: "No selected items found for removal." });
+    }
+
+    // Respond with a success message
+    console.log("Item removed from checkout and marked as unselected.");
+    res.status(200).json({
+      message:
+        "Items successfully removed from checkout and marked as unselected.",
+    });
+  } catch (error) {
+    console.error("Error while removing items from checkout:", error.message);
+    res.status(500).json({
+      message: "Failed to remove items from checkout.",
+      error: error.message,
+    });
+  }
+};
