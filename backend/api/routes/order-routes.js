@@ -17,4 +17,11 @@ router.get(
   orderController.getSelectedItemsInCheckout
 );
 
+// Route to remove items from checkout
+router.post(
+  "/checkout/remove-items-from-checkout/:selectedCartItemId",
+  protect,
+  orderController.removeItemsFromCheckout
+);
+
 module.exports = router;
