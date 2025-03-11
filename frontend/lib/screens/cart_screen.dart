@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/cart_item_widget.dart';
-import '../widgets/order_summary.dart'; // Import the OrderSummary widget
+import '../widgets/order_summary.dart'; 
+import 'order_confirmation_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -14,8 +15,8 @@ class CartScreen extends StatelessWidget {
     // Calculate values for OrderSummary
     double subtotal = cartProvider.getSubtotal();
     int totalItems = cartProvider.getTotalItems();
-    double shippingCharges = 200.0; // Set your fixed or dynamic shipping charge
-    double discount = cartProvider.getDiscount(); // Assume your provider calculates it
+    double shippingCharges = 200.0; 
+    double discount = cartProvider.getDiscount();
     double total = subtotal + shippingCharges - discount;
 
     return Scaffold(
@@ -44,7 +45,7 @@ class CartScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                // Add the Order Summary section
+                
                 OrderSummary(
                   subtotal: subtotal,
                   totalItems: totalItems,
@@ -52,22 +53,20 @@ class CartScreen extends StatelessWidget {
                   discount: discount,
                   total: total,
                 ),
+
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Show order success dialog
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text("Order Successful"),
-                          content: const Text("Your order has been placed!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("OK"),
-                            ),
-                          ],
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderConfirmationScreen(
+                            total: total,
+                            shippingCharges: shippingCharges,
+                            discount: discount,
+                            items: cartProvider.cartItems,
+                          ),
                         ),
                       );
                     },
