@@ -24,4 +24,7 @@ router.post(
   orderController.removeItemsFromCheckout
 );
 
+// Calculate order summary for selected items
+router.post("/order-summary", protect, orderController.calculateOrderSummary);
+
 module.exports = router;
