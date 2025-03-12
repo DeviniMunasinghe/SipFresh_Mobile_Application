@@ -45,7 +45,6 @@ class CartScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                
                 OrderSummary(
                   subtotal: subtotal,
                   totalItems: totalItems,
@@ -53,7 +52,6 @@ class CartScreen extends StatelessWidget {
                   discount: discount,
                   total: total,
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
@@ -62,10 +60,7 @@ class CartScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderConfirmationScreen(
-                            total: total,
-                            shippingCharges: shippingCharges,
-                            discount: discount,
-                            items: cartProvider.cartItems,
+                  
                           ),
                         ),
                       );
