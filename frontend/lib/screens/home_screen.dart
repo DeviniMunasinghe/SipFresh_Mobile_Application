@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'cart_screen.dart';
 import 'order_details_screen.dart';
 import 'category.dart';
-import 'order_confirmation_screen.dart'; // Import the OrderConfirmationScreen
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -36,7 +36,8 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text("Go to Order Details"), // Button text
             ),
-            const SizedBox(height: 10), // Add spacing between buttons
+
+             const SizedBox(height: 10), // Add spacing between buttons
             ElevatedButton(
               onPressed: () {
                 // Navigates to the JuiceCategoryPage when the button is pressed
@@ -47,24 +48,11 @@ class HomeScreen extends StatelessWidget {
               },
               child: const Text("View Juice Categories"), // Button text
             ),
-            const SizedBox(height: 10), // Add spacing between buttons
-            ElevatedButton(
-              onPressed: () {
-                // Navigates to the OrderConfirmationScreen when the button is pressed
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrderConfirmationScreen(
-                 
-                    ),
-                  ),
-                );
-              },
-              child: const Text("Go to Order Confirmation"), // Button text
-            ),
+
           ],
         ),
       ),
+      
     );
   }
 }
