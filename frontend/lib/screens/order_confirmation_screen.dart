@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/shipping_address_card.dart';  // Import the ShippingAddressCard widget
+import '../widgets/shipping_address_card.dart'; 
+import '../widgets/contact_info_card.dart';
+
+import '../widgets/bottom_nav_bar.dart';
+
 
 class OrderConfirmationScreen extends StatelessWidget {
   const OrderConfirmationScreen({super.key});
@@ -22,7 +26,9 @@ class OrderConfirmationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const ShippingAddressCard(),  // Add ShippingAddressCard here
-              const SizedBox(height: 20),  // Spacing between elements
+              const SizedBox(height: 20), 
+              const ContactInfoCard(),
+              const SizedBox(height: 10), // Spacing between elements
               const Text(
                 "This is my order confirmation",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
