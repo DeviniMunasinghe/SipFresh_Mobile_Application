@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/shipping_address_card.dart'; 
+import '../widgets/shipping_address_card.dart';
 import '../widgets/contact_info_card.dart';
-import '../widgets/order_summary_two.dart'; 
-import '../widgets/billing_address_selection.dart'; // ✅ Import Billing Address
-import '../models/cart_item.dart'; 
+import '../widgets/order_summary_two.dart';
+import '../widgets/billing_address_selection.dart';
+import '../widgets/shipping_method_card.dart'; // ✅ Import Shipping Method Card
+import '../widgets/complete_order_button.dart'; // ✅ Import Complete Order Button
+import '../models/cart_item.dart';
 import '../providers/cart_provider.dart';
 
 class OrderConfirmationScreen extends StatefulWidget {
@@ -20,7 +22,7 @@ class OrderConfirmationScreen extends StatefulWidget {
 }
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
-  int _selectedIndex = 2; 
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -60,7 +62,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped, 
+        onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
       ),
     );
@@ -84,7 +86,15 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
               items: widget.cartItems,
             ),
             const SizedBox(height: 20),
-            const BillingAddressSelection(), // ✅ Billing Address Selection BELOW Order Summary
+            const BillingAddressSelection(), // ✅ Billing Address Selection
+            const SizedBox(height: 20),
+            ShippingMethodCard(totalAmount: total), // ✅ Shipping Method Card
+            const SizedBox(height: 20),
+            CompleteOrderButton( // ✅ Complete Order Button
+              onPressed: () {
+                print("Order Completed!");
+              },
+            ),
           ],
         ),
       ),
