@@ -4,9 +4,10 @@ import '../widgets/shipping_address_card.dart';
 import '../widgets/contact_info_card.dart';
 import '../widgets/order_summary_two.dart'; 
 import '../models/cart_item.dart'; 
-import '../providers/cart_provider.dart'; // ✅ Import CartProvider
+import '../providers/cart_provider.dart';
 
-class OrderConfirmationScreen extends StatelessWidget {
+
+class OrderConfirmationScreen extends StatefulWidget {
   final List<CartItem> cartItems;
 
   const OrderConfirmationScreen({
@@ -15,43 +16,75 @@ class OrderConfirmationScreen extends StatelessWidget {
   });
 
   @override
+  State<OrderConfirmationScreen> createState() => _OrderConfirmationScreenState();
+}
+
+class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
+  int _selectedIndex = 2; // ✅ Set Cart as the active tab
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context); // ✅ Get CartProvider
+    final cartProvider = Provider.of<CartProvider>(context);
 
     // Get values from the cart provider
     double subtotal = cartProvider.getSubtotal();
     double shippingCharges = 200.0;
-    double discount = cartProvider.getDiscount(); // ✅ Fetch discount dynamically
+    double discount = cartProvider.getDiscount();
     double total = subtotal + shippingCharges - discount;
 
+    final List<Widget> _pages = [
+      const Center(child: Text("Home Page")),
+      const Center(child: Text("Categories Page")),
+      _buildOrderConfirmationContent(subtotal, shippingCharges, discount, total),
+      const Center(child: Text("Profile Page")),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Order Confirmation"),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.green,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ShippingAddressCard(),
-              const SizedBox(height: 20),
-              const ContactInfoCard(),
-              const SizedBox(height: 10),
-              const SizedBox(height: 20),
-              OrderSummaryTwo(
-                total: total,
-                shippingCharges: shippingCharges,
-                discount: discount, // ✅ Use the discount from CartProvider
-                items: cartItems,
-              ),
-            ],
-          ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Categories"),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped, 
+        type: BottomNavigationBarType.fixed,
+      ),
+    );
+  }
+
+  Widget _buildOrderConfirmationContent(double subtotal, double shippingCharges, double discount, double total) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ShippingAddressCard(),
+            const SizedBox(height: 20),
+            const ContactInfoCard(),
+            const SizedBox(height: 10),
+            const SizedBox(height: 20),
+            OrderSummaryTwo(
+              total: total,
+              shippingCharges: shippingCharges,
+              discount: discount,
+              items: widget.cartItems,
+            ),
+          ],
         ),
       ),
     );
