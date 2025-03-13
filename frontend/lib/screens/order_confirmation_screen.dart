@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import '../widgets/shipping_address_card.dart'; 
 import '../widgets/contact_info_card.dart';
 import '../widgets/order_summary_two.dart'; 
+import '../widgets/billing_address_selection.dart'; // ✅ Import Billing Address
 import '../models/cart_item.dart'; 
 import '../providers/cart_provider.dart';
-
 
 class OrderConfirmationScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -20,7 +20,7 @@ class OrderConfirmationScreen extends StatefulWidget {
 }
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
-  int _selectedIndex = 2; // ✅ Set Cart as the active tab
+  int _selectedIndex = 2; 
 
   void _onItemTapped(int index) {
     setState(() {
@@ -73,17 +73,18 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ShippingAddressCard(),
+            const ShippingAddressCard(), // ✅ Shipping Address
             const SizedBox(height: 20),
-            const ContactInfoCard(),
-            const SizedBox(height: 10),
+            const ContactInfoCard(), // ✅ Contact Info
             const SizedBox(height: 20),
-            OrderSummaryTwo(
+            OrderSummaryTwo( // ✅ Order Summary
               total: total,
               shippingCharges: shippingCharges,
               discount: discount,
               items: widget.cartItems,
             ),
+            const SizedBox(height: 20),
+            const BillingAddressSelection(), // ✅ Billing Address Selection BELOW Order Summary
           ],
         ),
       ),
