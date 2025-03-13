@@ -8,14 +8,14 @@ class CompleteOrderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity, // Full width button
+      width: double.infinity, 
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green, // Green button
-          padding: const EdgeInsets.symmetric(vertical: 14), // Add padding
+          backgroundColor: Colors.green, 
+          padding: const EdgeInsets.symmetric(vertical: 14), 
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners
+            borderRadius: BorderRadius.circular(10), 
           ),
         ),
         child: const Text(

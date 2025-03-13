@@ -11,19 +11,19 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  int _selectedIndex = 0; // Track selected index
+  int _selectedIndex = 0; 
 
   // List of pages for navigation
   final List<Widget> _pages = [
     const HomeScreen(),
     JuiceCategoryPage(),
     const CartScreen(),
-    const Center(child: Text("Profile Page")), // Placeholder for Profile
+    const Center(child: Text("Profile Page")), 
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; // Update selected index
+      _selectedIndex = index; 
     });
   }
 

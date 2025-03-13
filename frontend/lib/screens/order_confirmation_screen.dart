@@ -4,10 +4,11 @@ import '../widgets/shipping_address_card.dart';
 import '../widgets/contact_info_card.dart';
 import '../widgets/order_summary_two.dart';
 import '../widgets/billing_address_selection.dart';
-import '../widgets/shipping_method_card.dart'; // ✅ Import Shipping Method Card
-import '../widgets/complete_order_button.dart'; // ✅ Import Complete Order Button
+import '../widgets/shipping_method_card.dart'; 
+import '../widgets/complete_order_button.dart'; 
 import '../models/cart_item.dart';
 import '../providers/cart_provider.dart';
+import '../widgets/order_success_dialog.dart'; 
 
 class OrderConfirmationScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -75,24 +76,30 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ShippingAddressCard(), // ✅ Shipping Address
+            const ShippingAddressCard(), 
             const SizedBox(height: 20),
-            const ContactInfoCard(), // ✅ Contact Info
+            const ContactInfoCard(), 
             const SizedBox(height: 20),
-            OrderSummaryTwo( // ✅ Order Summary
+            OrderSummaryTwo( 
               total: total,
               shippingCharges: shippingCharges,
               discount: discount,
               items: widget.cartItems,
             ),
             const SizedBox(height: 20),
-            const BillingAddressSelection(), // ✅ Billing Address Selection
+            const BillingAddressSelection(),
             const SizedBox(height: 20),
-            ShippingMethodCard(totalAmount: total), // ✅ Shipping Method Card
+            ShippingMethodCard(totalAmount: total),
             const SizedBox(height: 20),
-            CompleteOrderButton( // ✅ Complete Order Button
+            CompleteOrderButton( 
               onPressed: () {
-                print("Order Completed!");
+                // Show the order success dialog 
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const OrderSuccessDialog();
+                  },
+                );
               },
             ),
           ],
