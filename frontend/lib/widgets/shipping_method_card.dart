@@ -13,13 +13,13 @@ class ShippingMethodCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Align left
+          crossAxisAlignment: CrossAxisAlignment.start, 
           children: [
             const Text(
               "Shipping Method",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8), // Add space between title and content
+            const SizedBox(height: 8), 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

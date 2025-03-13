@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/cart_item.dart'; // Import CartItem model
+import '../models/cart_item.dart'; 
 
 class OrderSummaryTwo extends StatelessWidget {
   final double total;
@@ -35,12 +35,12 @@ class OrderSummaryTwo extends StatelessWidget {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundImage: AssetImage(item.imageUrl), // ✅ Use `imageUrl` instead of `imagePath`
+                        backgroundImage: AssetImage(item.imageUrl), 
                         radius: 20,
                       ),
                       const SizedBox(width: 10),
-                      Expanded(child: Text(item.name)), // ✅ Ensure `name` exists in `CartItem`
-                      Text("LKR ${item.price.toStringAsFixed(2)}"), // ✅ Ensure `price` exists
+                      Expanded(child: Text(item.name)), 
+                      Text("LKR ${item.price.toStringAsFixed(2)}"), 
                     ],
                   ),
                 )),
