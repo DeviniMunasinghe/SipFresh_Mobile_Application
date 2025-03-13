@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import '../widgets/shipping_address_card.dart'; 
 import '../widgets/contact_info_card.dart';
 import '../widgets/order_summary_two.dart'; 
-import '../widgets/billing_address_selection.dart'; // ✅ Import Billing Address
+import '../widgets/billing_address_selection.dart'; 
+import '../widgets/shipping_method_card.dart'; // ✅ Import Shipping Method Card
 import '../models/cart_item.dart'; 
 import '../providers/cart_provider.dart';
 
@@ -84,7 +85,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
               items: widget.cartItems,
             ),
             const SizedBox(height: 20),
-            const BillingAddressSelection(), // ✅ Billing Address Selection BELOW Order Summary
+            const BillingAddressSelection(), // ✅ Billing Address Selection
+            const SizedBox(height: 20),
+            ShippingMethodCard(totalAmount: total), // ✅ Imported Shipping Method Card
           ],
         ),
       ),
