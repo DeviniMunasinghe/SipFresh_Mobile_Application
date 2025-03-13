@@ -5,22 +5,19 @@ import '../widgets/order_summary_two.dart';
 import '../models/cart_item.dart'; 
 
 class OrderConfirmationScreen extends StatelessWidget {
-  const OrderConfirmationScreen({super.key});
+  final List<CartItem> cartItems;
+
+  const OrderConfirmationScreen({
+    super.key,
+    required this.cartItems, // Receive cart items as a parameter
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Sample data for the order summary
-    final double total = 5000.0;
-    final double shippingCharges = 200.0;
-    final double discount = 100.0;
-
-    // Sample cart items
-   final List<CartItem> items = [
-  CartItem(name: 'Item 1', price: 1500.0, quantity: 1, imageUrl: 'assets/item1.jpg'),
-  CartItem(name: 'Item 2', price: 2000.0, quantity: 2, imageUrl: 'assets/item2.jpg'),
-  CartItem(name: 'Item 3', price: 1500.0, quantity: 1, imageUrl: 'assets/item3.jpg'),
-];
-
+    // Calculate total dynamically from the cart items
+    double total = cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    double shippingCharges = 200.0;
+    double discount = 100.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -40,18 +37,18 @@ class OrderConfirmationScreen extends StatelessWidget {
               const ShippingAddressCard(),
               const SizedBox(height: 20),
               const ContactInfoCard(),
-              const SizedBox(height: 10), // Spacing between elements
+              const SizedBox(height: 10),
               const Text(
                 "This is my order confirmation",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 20), // Added spacing before the order summary
+              const SizedBox(height: 20),
               OrderSummaryTwo(
                 total: total,
                 shippingCharges: shippingCharges,
                 discount: discount,
-                items: items,
-              ), // Pass parameters to OrderSummaryTwo
+                items: cartItems, // Use the passed cart items
+              ),
             ],
           ),
         ),

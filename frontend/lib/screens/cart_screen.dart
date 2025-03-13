@@ -59,9 +59,9 @@ class CartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => OrderConfirmationScreen(
-                  
-                          ),
+                           builder: (context) => OrderConfirmationScreen(
+                          cartItems: cartProvider.cartItems, 
+                        ),
                         ),
                       );
                     },
