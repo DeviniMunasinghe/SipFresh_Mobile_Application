@@ -208,3 +208,87 @@ exports.calculateOrderSummary = async (selectedCartItemIds) => {
     res.status(500).json({ error: "Failed to calculate order summary" });
   }
 };
+
+// Get order summary for selected items (GET method)
+exports.getOrderSummary = async (req, res) => {
+  const { selectedCartItemIds } = req.query;
+  console.log("Received selectedCartItemIds:", selectedCartItemIds);
+
+  if (
+    !selectedCartItemIds ||
+    !Array.isArray(JSON.parse(selectedCartItemIds)) ||
+    JSON.parse(selectedCartItemIds).length === 0
+  ) {
+    console.log("No items selected condition triggered.");
+    return res.status(400).json({ error: "No items selected" });
+  }
+
+  try {
+    const cartItemIds = JSON.parse(selectedCartItemIds);
+
+    const placeholders = cartItemIds.map(() => "?").join(",");
+
+    // Fetch selected items from the cart_items table, including item details from the items table
+    const [selectedItems] = await db.execute(
+      `SELECT ci.cart_item_id, ci.quantity, itm.item_price, itm.item_name
+       FROM cart_items ci
+       JOIN item itm ON ci.item_id = itm.item_id
+       WHERE ci.cart_item_id IN (${placeholders}) AND ci.is_deleted = 0`,
+      cartItemIds
+    );
+
+    console.log("Selected items from database:", selectedItems);
+
+    if (selectedItems.length === 0) {
+      return res
+        .status(404)
+        .json({ error: "Selected items not found or already deleted" });
+    }
+
+    // Check for any active promotion
+    const [promotion] = await db.execute(
+      `SELECT pr.discount_percentage 
+       FROM promotion p
+       JOIN promotion_rule pr ON p.promotion_id = pr.promotion_id
+       WHERE CURDATE() BETWEEN p.start_date AND p.end_date 
+       LIMIT 1`
+    );
+
+    // Set discount percentage (0 if no promotion is found)
+    const discountPercentage = promotion.length
+      ? promotion[0].discount_percentage
+      : 0;
+
+    let totalAmount = 0;
+    let totalQuantity = 0;
+
+    // Calculate the total amount, total quantity, and total discount
+    selectedItems.forEach((item) => {
+      const quantity = item.quantity ?? 1; // Default to 1 if quantity is null
+      const { item_price } = item;
+      totalAmount += quantity * item_price;
+      totalQuantity += quantity;
+    });
+
+    // Calculate discount amount based on the totalAmount
+    const discountAmount = (totalAmount * discountPercentage) / 100;
+    const finalAmount = totalAmount - discountAmount;
+
+    console.log("Calculated Order Summary:", {
+      totalAmount,
+      discountAmount,
+      finalAmount,
+    });
+
+    // Send the calculated order summary as a response
+    return res.json({
+      totalAmount,
+      discountAmount,
+      finalAmount,
+      totalQuantity,
+    });
+  } catch (err) {
+    console.error("Error while calculating order summary:", err);
+    return res.status(500).json({ error: "Failed to calculate order summary" });
+  }
+};
