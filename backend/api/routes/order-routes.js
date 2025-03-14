@@ -27,4 +27,7 @@ router.post(
 // Calculate order summary for selected items
 router.post("/order-summary", protect, orderController.calculateOrderSummary);
 
+// Route to calculate order summary using GET method
+router.get("/order-summary", protect, orderController.getOrderSummary);
+
 module.exports = router;
