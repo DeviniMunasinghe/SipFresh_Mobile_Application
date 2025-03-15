@@ -292,3 +292,173 @@ exports.getOrderSummary = async (req, res) => {
     return res.status(500).json({ error: "Failed to calculate order summary" });
   }
 };
+
+//place an order
+exports.placeOrder = async (req, res) => {
+  const {
+    selectedCartItemIds,
+    first_name,
+    last_name,
+    address,
+    city,
+    postal_code,
+    phone_number,
+    cart_id,
+  } = req.body;
+  const userId = req.user.user_id;
+  const userEmail = req.user.email;
+
+  if (
+    !cart_id ||
+    !selectedCartItemIds ||
+    !Array.isArray(selectedCartItemIds) ||
+    selectedCartItemIds.length === 0
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Cart ID and selected item IDs are required." });
+  }
+
+  if (
+    !first_name ||
+    !last_name ||
+    !address ||
+    !city ||
+    !postal_code ||
+    !phone_number
+  ) {
+    return res
+      .status(400)
+      .json({ error: "All delivery details must be provided" });
+  }
+
+  let connection;
+  try {
+    console.log("Placing order for user:", userId);
+
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+    console.log("Transaction started.");
+
+    const placeholders = selectedCartItemIds.map(() => "?").join(",");
+
+    console.log("Placing order for user:", userId);
+    console.log("Selected Cart Item IDs:", selectedCartItemIds);
+    console.log("Cart ID:", cart_id);
+
+    const [items] = await connection.execute(
+      `SELECT ci.item_id, ci.quantity, itm.item_price 
+       FROM cart_items ci 
+       JOIN cart c ON ci.cart_id = c.cart_id 
+       JOIN item itm ON ci.item_id = itm.item_id 
+       WHERE ci.cart_item_id IN (${placeholders}) 
+         AND ci.cart_id = ? 
+         AND ci.is_deleted = 0 
+         AND ci.selected = 1 
+         AND c.user_id = ?`,
+      [...selectedCartItemIds, cart_id, userId]
+    );
+
+    console.log("Fetched items for order:", items);
+
+    // Validate quantities
+    const invalidItems = items.filter(
+      (item) => item.quantity === null || item.quantity <= 0
+    );
+    if (invalidItems.length > 0) {
+      console.warn(
+        "Items with invalid or missing quantities found:",
+        invalidItems
+      );
+      return res
+        .status(400)
+        .json({ error: "Some items have invalid or missing quantities." });
+    }
+
+    // Calculate total amounts by calling the existing function
+    const { totalAmount, discountAmount, finalAmount } =
+      await exports.calculateOrderSummary(selectedCartItemIds);
+
+    // Create a new order
+    const [orderResult] = await connection.execute(
+      `INSERT INTO \`order\` (user_id, total_amount, order_status, cart_id,discount,final_amount,order_date) 
+             VALUES (?, ?, 'Pending', ?,?,?,Now())`,
+      [userId, totalAmount, cart_id, discountAmount, finalAmount]
+    );
+    const orderId = orderResult.insertId;
+
+    // Add items to the order_items table
+    for (const item of items) {
+      const { item_id, quantity, item_price } = item;
+      console.log("Attempting to insert into order_items:", {
+        orderId,
+        item_id,
+        quantity,
+        item_price,
+      });
+
+      try {
+        await connection.execute(
+          `INSERT INTO order_items (order_id, item_id, quantity, item_price) VALUES (?, ?, ?, ?)
+`,
+          [orderId, item_id, quantity, item_price]
+        );
+        console.log("Inserted item successfully:", { orderId, item_id });
+      } catch (insertError) {
+        console.error("Error inserting item into order_items:", insertError);
+        throw insertError;
+      }
+    }
+
+    // Store delivery details in order_details
+    await connection.execute(
+      `INSERT INTO order_details (order_id, address, city, postal_code, phone_number, first_name, last_name) 
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [orderId, address, city, postal_code, phone_number, first_name, last_name]
+    );
+
+    if (!userEmail) {
+      console.error("User email is not available in the request object.");
+      return res.status(400).json({
+        error: "User email is not defined. Please ensure it is provided.",
+      });
+    }
+
+    console.log("Recipient email:", userEmail);
+
+    // Send confirmation email to the user
+    try {
+      await sendEmail(
+        userEmail,
+        `Order Confirmation - ${orderId}`,
+        `Thank you for your order! Your order ID is ${orderId}.\nWe are processing your order, and we will keep you updated on its status. Please stay tuned!`
+      );
+      console.log("Order confirmation email sent to:", userEmail);
+    } catch (emailError) {
+      console.error(
+        "Failed to send order confirmation email:",
+        emailError.message
+      );
+      return res.status(500).json({
+        error: "Failed to send order confirmation email",
+      });
+    }
+
+    await connection.commit();
+    res.json({
+      message: "Order placed successfully",
+      orderId,
+      totalAmount,
+      discountAmount,
+      finalAmount,
+    });
+  } catch (error) {
+    if (connection) await connection.rollback();
+    console.error("Error while placing order:", error);
+    res.status(500).json({
+      error: "Failed to place order",
+    });
+  } finally {
+    if (connection) connection.release();
+  }
+};
