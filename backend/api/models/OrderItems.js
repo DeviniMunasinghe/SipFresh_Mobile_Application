@@ -37,6 +37,20 @@ class OrderItems {
       throw new Error("Error transferring items to order: " + error.message);
     }
   }
+
+  //Insert items into the order_items table
+  static async addItemToOrder(orderId, itemId, quantity, itemPrice) {
+    console.log("Adding item to order_items:", {
+      orderId,
+      itemId,
+      quantity,
+      itemPrice,
+    });
+    return db.execute(
+      "INSERT INTO order_items (order_id,item_id,quantity,item_price) VALUES (?,?,?,?)",
+      [orderId, itemId, quantity, itemPrice]
+    );
+  }
 }
 
 module.exports = OrderItems;
