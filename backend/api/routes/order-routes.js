@@ -30,4 +30,7 @@ router.post("/order-summary", protect, orderController.calculateOrderSummary);
 // Route to calculate order summary using GET method
 router.get("/order-summary", protect, orderController.getOrderSummary);
 
+//Place an order
+router.post("/place", protect, orderController.placeOrder);
+
 module.exports = router;
