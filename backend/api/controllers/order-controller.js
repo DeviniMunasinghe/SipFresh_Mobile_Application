@@ -462,3 +462,26 @@ exports.placeOrder = async (req, res) => {
     if (connection) connection.release();
   }
 };
+
+//Get all orders for admin Management
+exports.getAllOrders = async (req, res) => {
+  try {
+    const [orders] = await db.execute(
+      "SELECT ord.order_id, GROUP_CONCAT(itm.item_name SEPARATOR ', ') AS item_names, ord.final_amount AS total_final_price, ord.order_status FROM `order` ord JOIN order_items orderItem ON ord.order_id = orderItem.order_id JOIN item itm ON orderItem.item_id = itm.item_id WHERE ord.is_deleted=0 GROUP BY ord.order_id"
+    );
+
+    // Formatting the results to a more structured response
+    const formattedOrders = orders.map((order) => ({
+      order_id: order.order_id,
+      item_names: order.item_names,
+      total_final_price: order.total_final_price,
+      order_status: order.order_status,
+    }));
+
+    res.json(formattedOrders);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
