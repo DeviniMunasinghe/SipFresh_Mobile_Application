@@ -33,4 +33,12 @@ router.get("/order-summary", protect, orderController.getOrderSummary);
 //Place an order
 router.post("/place", protect, orderController.placeOrder);
 
+// Route for admins to fetch all orders along with their details
+router.get(
+  "/admin/orders",
+  protect,
+  adminOrSuperAdmin,
+  orderController.getAllOrders
+);
+
 module.exports = router;
