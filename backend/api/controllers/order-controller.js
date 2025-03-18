@@ -485,3 +485,20 @@ exports.getAllOrders = async (req, res) => {
     });
   }
 };
+
+//Fetch all orders for an user
+exports.getUserOrders = async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    const [orders] = await db.execute(
+      `SELECT * FROM \`order\` WHERE user_id = ? ORDER BY order_date DESC`,
+      [userId]
+    );
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
