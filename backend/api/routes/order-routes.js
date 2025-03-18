@@ -41,4 +41,7 @@ router.get(
   orderController.getAllOrders
 );
 
+//Get all orders for a user
+router.get("/user-orders", protect, orderController.getUserOrders);
+
 module.exports = router;
