@@ -19,6 +19,14 @@ class Order {
     );
     return results;
   }
+
+  //Get all orders for a user
+  static async getOrderByUser(userId) {
+    return db.execute(
+      `SELECT * FROM \`order\` WHERE user_id = ? ORDER BY order_date DESC`,
+      [userId]
+    );
+  }
 }
 
 module.exports = Order;
