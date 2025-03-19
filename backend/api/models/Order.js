@@ -27,6 +27,15 @@ class Order {
       [userId]
     );
   }
+
+  //Get a specific order byID
+  static async getOrderById(orderId) {
+    const [row] = await db.execute("SELECT * FROM 'order' WHERE order_id=?", [
+      orderId,
+    ]);
+    //return the first row
+    return row[0];
+  }
 }
 
 module.exports = Order;
