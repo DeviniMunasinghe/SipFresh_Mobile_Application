@@ -502,3 +502,34 @@ exports.getUserOrders = async (req, res) => {
     });
   }
 };
+
+//Fetch order details and items by order Id
+exports.getOrderDetails = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const [orderDetails] = await db.execute(
+      "SELECT od.*, ord.user_id, ord.total_amount AS total_price, ord.discount, ord.final_amount AS final_total_price, ord.order_status FROM order_details od JOIN `order` ord ON od.order_id = ord.order_id WHERE od.order_id = ?",
+      [orderId]
+    );
+
+    const [orderItems] = await db.execute(
+      `SELECT oi.order_item_id,oi.quantity,oi.item_price,oi.item_id,oi.order_id,itm.item_name FROM order_items oi JOIN item itm ON oi.item_id=itm.item_id WHERE oi.order_id=?`,
+      [orderId]
+    );
+
+    // Check if the order exists
+    if (orderDetails.length === 0) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json({
+      orderDetails: orderDetails[0],
+      orderItems,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
