@@ -16,6 +16,16 @@ class OrderDetails {
       [orderId, firstName, lastName, address, city, postalCode, phoneNumber]
     );
   }
+
+   //Get order details by orderID
+   static async getDetailsByOrderId(orderId) {
+    const [row] = await db.execute(
+      "SELECT*FROM order_details WHERE order_id=?",
+      [orderId]
+    );
+    //return the first row
+    return row[0];
+  }
 }
 
 module.exports = OrderDetails;
