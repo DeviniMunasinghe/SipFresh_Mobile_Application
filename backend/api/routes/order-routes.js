@@ -52,4 +52,12 @@ router.get(
   orderController.getOrderDetails
 );
 
+// Route for admins to update the status of a specific order
+router.put(
+  "/admin/order-status/:orderId",
+  protect,
+  adminOrSuperAdmin,
+  orderController.updateOrderStatus
+);
+
 module.exports = router;
