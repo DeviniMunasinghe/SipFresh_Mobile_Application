@@ -60,4 +60,12 @@ router.put(
   orderController.updateOrderStatus
 );
 
+// Route for admins to delete a specific order by its ID
+router.delete(
+  "/admin/delete/:orderId",
+  protect,
+  adminOrSuperAdmin,
+  orderController.deleteOrder
+);
+
 module.exports = router;
