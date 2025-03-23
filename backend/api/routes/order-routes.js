@@ -68,4 +68,12 @@ router.delete(
   orderController.deleteOrder
 );
 
+// Route for admins to get the percentage of each order status (Pending, Successful, Failed)
+router.get(
+  "/admin/order-status-percentages",
+  protect,
+  adminOrSuperAdmin,
+  orderController.getOrderStatusPercentages
+);
+
 module.exports = router;
