@@ -36,6 +36,15 @@ class Order {
     //return the first row
     return row[0];
   }
+
+  //Count orders by status
+  static async countOrdersByStatus(status) {
+    const [results] = await db.execute(
+      "SELECT COUNT(*) AS count FROM 'order' WHERE order_status=?",
+      [status]
+    );
+    return results[0].count;
+  }
 }
 
 module.exports = Order;
