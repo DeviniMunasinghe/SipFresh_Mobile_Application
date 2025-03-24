@@ -656,3 +656,30 @@ exports.getOrderStatusPercentages = async (req, res) => {
       .json({ error: "Failed to calculate order status percentages." });
   }
 };
+
+// Get order statistics
+exports.getOrderStatistics = async (req, res) => {
+  try {
+    const totalCount = await db.execute(
+      `SELECT COUNT(*) AS count FROM \`order\` WHERE is_deleted=0`
+    );
+    const pendingCount = await db.execute(
+      `SELECT COUNT(*) AS count FROM \`order\` WHERE order_status = 'Pending' AND is_deleted=0`
+    );
+    const successfulCount = await db.execute(
+      `SELECT COUNT(*) AS count FROM \`order\` WHERE order_status = 'Successful' AND is_deleted=0`
+    );
+    const failedCount = await db.execute(
+      `SELECT COUNT(*) AS count FROM \`order\` WHERE order_status = 'Failed' AND is_deleted=0`
+    );
+
+    res.json({
+      totalOrders: totalCount[0][0].count,
+      pendingOrders: pendingCount[0][0].count,
+      successfulOrders: successfulCount[0][0].count,
+      failedOrders: failedCount[0][0].count,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
