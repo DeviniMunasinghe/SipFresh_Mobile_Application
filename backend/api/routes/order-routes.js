@@ -68,6 +68,14 @@ router.delete(
   orderController.deleteOrder
 );
 
+// Route for admins to fetch order statistics (total, pending, successful, failed orders)
+router.get(
+  "/admin/statistics",
+  protect,
+  adminOrSuperAdmin,
+  orderController.getOrderStatistics
+);
+
 // Route for admins to get the percentage of each order status (Pending, Successful, Failed)
 router.get(
   "/admin/order-status-percentages",
