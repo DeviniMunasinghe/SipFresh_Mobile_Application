@@ -30,8 +30,7 @@ class SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('assets/images/Logo.png', height: 320),
-
-            // SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               "Blend of Health and Happiness",
               style: TextStyle(
