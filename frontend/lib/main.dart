@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
-import 'widgets/bottom_nav_bar.dart'; 
+// import 'widgets/bottom_nav_bar.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const BottomNavBar(), // Set BottomNavBar as the main layout
+      home: const SplashScreen(), // Set BottomNavBar as the main layout
     );
   }
 }
