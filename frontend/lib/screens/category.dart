@@ -13,6 +13,8 @@ class JuiceCategoryPage extends StatelessWidget {
     {"name": "Watermelon Juice", "image": "assets/images/juice2.png", "price": 180.00},
   ];
 
+  const JuiceCategoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

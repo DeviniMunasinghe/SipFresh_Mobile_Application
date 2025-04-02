@@ -53,11 +53,11 @@ class OrderSuccessDialog extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop(); 
               },
-              child: const Text('OK'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green, 
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
               ),
+              child: const Text('OK'),
             ),
           ],
         ),
