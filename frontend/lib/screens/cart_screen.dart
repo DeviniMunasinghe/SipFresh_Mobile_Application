@@ -59,12 +59,19 @@ class CartScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                           builder: (context) => OrderConfirmationScreen(
-                          cartItems: cartProvider.cartItems, 
-                        ),
+                          builder: (context) => OrderConfirmationScreen(
+                            cartItems: cartProvider.cartItems,
+                          ),
                         ),
                       );
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green, 
+                      foregroundColor: Colors.white, 
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 12.0),
+                      textStyle: const TextStyle(fontSize: 18),
+                    ),
                     child: const Text("Checkout"),
                   ),
                 ),
