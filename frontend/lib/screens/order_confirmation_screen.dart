@@ -41,7 +41,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     double discount = cartProvider.getDiscount();
     double total = subtotal + shippingCharges - discount;
 
-    final List<Widget> pages = [
+    final List<Widget> _pages = [
       const Center(child: Text("Home Page")),
       const Center(child: Text("Categories Page")),
       _buildOrderConfirmationContent(subtotal, shippingCharges, discount, total),
@@ -51,7 +51,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: pages,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
