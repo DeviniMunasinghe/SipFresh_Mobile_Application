@@ -43,3 +43,37 @@ exports.addPromotion = async (req, res) => {
   }
 };
 
+//Apply promotion logic to the order
+exports.applyPromotion = async (req, res) => {
+  const { total_price, categories } = req.body;
+
+  try {
+    const promotions = await Promotion.findAll();
+    let discount = 0;
+
+    promotions.forEach((promo) => {
+      const promoCategories = promo.categories;
+
+      if (promoCategories === categories) {
+        promo.rules.forEach((rule) => {
+          if (total_price >= rule.min_price) {
+            discount = Math.max(discount, rule.discount_percentage);
+          }
+        });
+      }
+    });
+
+    const final_price = total_price - (total_price * discount) / 100;
+
+    res.status(200).json({
+      message: `Applied ${discount}% discount`,
+      original_price: total_price,
+      final_price,
+      discount_percentage: discount,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error applying promotion", error: error.message });
+  }
+};
