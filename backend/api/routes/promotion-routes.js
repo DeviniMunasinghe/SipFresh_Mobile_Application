@@ -45,4 +45,6 @@ router.post(
   promotionController.addPromotion
 );
 
+router.post("/apply", promotionController.applyPromotion);
+
 module.exports = router;
