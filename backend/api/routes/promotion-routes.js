@@ -47,4 +47,12 @@ router.post(
 
 router.post("/apply", promotionController.applyPromotion);
 
+// Admin-only route to delete a promotion by ID
+router.delete(
+  "/:promotionId",
+  protect,
+  adminOrSuperAdmin,
+  promotionController.deletePromotion
+);
+
 module.exports = router;
