@@ -77,3 +77,22 @@ exports.applyPromotion = async (req, res) => {
       .json({ message: "Error applying promotion", error: error.message });
   }
 };
+
+// Delete a promotion by ID
+exports.deletePromotion = async (req, res) => {
+  const { promotionId } = req.params;
+
+  console.log(`Request to delete promotion with ID: ${promotionId}`);
+
+  try {
+    const result = await Promotion.deleteById(promotionId);
+    console.log("Delete result:", result);
+    res.status(204).send("Promotion deleted successfully");
+  } catch (error) {
+    console.error("Error deleting promotion:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
