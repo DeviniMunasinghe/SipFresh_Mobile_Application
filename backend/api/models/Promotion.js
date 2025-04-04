@@ -69,6 +69,30 @@ class Promotion {
       connection.release();
     }
   }
+
+  // Delete a promotion and its rules by ID
+  static async deleteById(promotionId) {
+    const connection = await db.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      await connection.execute(
+        `DELETE FROM promotion_rule WHERE promotion_id = ?`,
+        [promotionId]
+      );
+
+      await connection.execute(`DELETE FROM promotion WHERE promotion_id = ?`, [
+        promotionId,
+      ]);
+
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw new Error("Error deleting promotion: " + error.message);
+    } finally {
+      connection.release();
+    }
+  }
 }
 
 module.exports = Promotion;
