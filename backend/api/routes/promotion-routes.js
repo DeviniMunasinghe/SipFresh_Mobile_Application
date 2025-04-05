@@ -38,7 +38,7 @@ const upload = multer({
 
 // Admin-only route to add promotions
 router.post(
-  "/",
+  "/add-promotion",
   protect,
   adminOrSuperAdmin,
   upload.single("promotion_image"),
