@@ -55,4 +55,12 @@ router.delete(
   promotionController.deletePromotion
 );
 
+// Admin-only route to fetch a promotion by ID
+router.get(
+  "/:promotionId",
+  protect,
+  adminOrSuperAdmin,
+  promotionController.getPromotionById
+);
+
 module.exports = router;
