@@ -96,3 +96,26 @@ exports.deletePromotion = async (req, res) => {
     });
   }
 };
+
+// Get a single promotion by its ID
+exports.getPromotionById = async (req, res) => {
+  const { promotionId } = req.params;
+
+  try {
+    const promotion = await Promotion.findById(promotionId);
+
+    if (!promotion) {
+      return res.status(404).json({
+        message: "Promotion not found",
+      });
+    }
+
+    res.status(200).json(promotion);
+  } catch (error) {
+    console.error("Error fetching promotion:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
