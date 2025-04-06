@@ -93,6 +93,35 @@ class Promotion {
       connection.release();
     }
   }
+
+  // Find promotion by ID with rules
+  static async findById(promotionId) {
+    try {
+      const [promotionResults] = await db.execute(
+        "SELECT * FROM promotion WHERE promotion_id = ?",
+        [promotionId]
+      );
+
+      const promotion = promotionResults[0];
+
+      if (!promotion) return null;
+
+      const [rules] = await db.execute(
+        `SELECT * FROM promotion_rule WHERE promotion_id = ?`,
+        [promotionId]
+      );
+
+      console.log("Fetched rules for promotion:", rules);
+      promotion.rules = rules.map((rule) => ({
+        rule_id: rule.rule_id,
+        min_price: rule.min_price,
+        discount_percentage: rule.discount_percentage,
+      }));
+      return promotion;
+    } catch (error) {
+      throw new Error("Error fetching promotion: " + error.message);
+    }
+  }
 }
 
 module.exports = Promotion;
