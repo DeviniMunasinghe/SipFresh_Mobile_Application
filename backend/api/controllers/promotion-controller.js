@@ -119,3 +119,18 @@ exports.getPromotionById = async (req, res) => {
     });
   }
 };
+
+// Get all active promotions
+exports.getAllPromotions = async (req, res) => {
+  try {
+    const promotions = await Promotion.findAll();
+    console.log("Promotions with rules:", promotions);
+    res.status(200).json(promotions);
+  } catch (error) {
+    console.error("Error fetching promotions:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error.message,
+    });
+  }
+};
