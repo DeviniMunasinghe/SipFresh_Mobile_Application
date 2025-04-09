@@ -63,4 +63,6 @@ router.get(
   promotionController.getPromotionById
 );
 
+// Public route to get active promotions
+router.get("/", promotionController.getAllPromotions);
 module.exports = router;
