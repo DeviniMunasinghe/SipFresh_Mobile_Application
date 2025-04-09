@@ -122,6 +122,48 @@ class Promotion {
       throw new Error("Error fetching promotion: " + error.message);
     }
   }
+
+  static async findAll() {
+    try {
+      // Fetch all promotions
+      const [promotions] = await db.execute(`SELECT * FROM promotion`);
+      if (promotions.length === 0) return promotions; // Return empty if no promotions found
+
+      // Collect promotion IDs
+      const promotionIds = promotions.map((promo) => promo.promotion_id);
+
+      // Fetch all rules for the collected promotion IDs
+      const [rules] = await db.execute(
+        `SELECT * FROM promotion_rule WHERE promotion_id IN (${promotionIds.join(
+          ","
+        )})`
+      );
+
+      // Group rules by promotion_id
+      const groupedRules = {};
+      promotionIds.forEach((id) => (groupedRules[id] = [])); // Initialize empty arrays for each promotion_id
+
+      rules.forEach((rule) => {
+        if (!groupedRules[rule.promotion_id]) {
+          groupedRules[rule.promotion_id] = [];
+        }
+        groupedRules[rule.promotion_id].push({
+          rule_id: rule.rule_id,
+          min_price: rule.min_price,
+          discount_percentage: rule.discount_percentage,
+        });
+      });
+
+      // Attach rules to the corresponding promotion
+      return promotions.map((promotion) => ({
+        ...promotion,
+        rules: groupedRules[promotion.promotion_id] || [],
+      }));
+    } catch (error) {
+      console.error("Error fetching promotions:", error);
+      throw new Error("Failed to fetch promotions.");
+    }
+  }
 }
 
 module.exports = Promotion;
