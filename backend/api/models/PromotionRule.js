@@ -19,6 +19,19 @@ class PromotionRule {
       throw new Error("Error adding promotion rule: " + error.message);
     }
   }
+
+  // Get all rules for a specific promotion
+  static async findByPromotionId(promotionId) {
+    try {
+      const [rules] = await db.execute(
+        "SELECT * FROM promotion_rule WHERE promotion_id = ?",
+        [promotionId]
+      );
+      return rules;
+    } catch (error) {
+      throw new Error("Error fetching promotion rules: " + error.message);
+    }
+  }
 }
 
 module.exports = PromotionRule;
