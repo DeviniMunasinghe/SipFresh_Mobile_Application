@@ -32,6 +32,17 @@ class PromotionRule {
       throw new Error("Error fetching promotion rules: " + error.message);
     }
   }
+
+  // Delete a rule by ID
+  static async deleteById(ruleId) {
+    try {
+      await db.execute("DELETE FROM promotion_rule WHERE rule_id = ?", [
+        ruleId,
+      ]);
+    } catch (error) {
+      throw new Error("Error deleting promotion rule: " + error.message);
+    }
+  }
 }
 
 module.exports = PromotionRule;
