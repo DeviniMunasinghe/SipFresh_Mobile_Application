@@ -17,6 +17,16 @@ class RegistrationScreen extends StatelessWidget {
               Image.asset(
                 'assets/images/Logo.png',
                 height: 120,
+              ),
+              SizedBox(height: 20),
+              // welcome text
+              Text(
+                "Welcome to SipFresh",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF82BA53),
+                ),
               )
             ],
           ),
