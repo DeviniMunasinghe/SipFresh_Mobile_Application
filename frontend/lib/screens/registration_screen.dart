@@ -87,7 +87,7 @@ class RegistrationScreen extends StatelessWidget {
 
               // social login button for Google
               SocialLoginButton(
-                iconPath: 'assets/google_icon.png',
+                iconPath: 'assets/images/google_icon.png',
                 text: "Continue with Google",
                 onTap: () {},
               ),
@@ -96,7 +96,7 @@ class RegistrationScreen extends StatelessWidget {
 
               // social login button for Facebook
               SocialLoginButton(
-                iconPath: 'assets/facebook_icon.png',
+                iconPath: 'assets/images/facebook_icon.png',
                 text: "Continue with Facebook",
                 onTap: () {},
               ),
