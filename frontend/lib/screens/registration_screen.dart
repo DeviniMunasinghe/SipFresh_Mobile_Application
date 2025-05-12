@@ -71,6 +71,13 @@ class RegistrationScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20),
+              // separator text for alternative login options
+              Text(
+                "---------------Or---------------",
+                style: TextStyle(color: Colors.grey),
+              ),
+
+              SizedBox(height: 20),
             ],
           ),
         ),
