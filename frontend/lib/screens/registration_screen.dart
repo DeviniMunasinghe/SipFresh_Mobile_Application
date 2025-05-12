@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
+import 'signup_screen.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
@@ -46,6 +47,30 @@ class RegistrationScreen extends StatelessWidget {
                 },
                 child: Text("Log In", style: TextStyle(color: Colors.white)),
               ),
+              SizedBox(height: 10),
+
+              // signup button with navigation to sign up screen
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  side: BorderSide(color: Color(0xFF82BA53)),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                },
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(
+                    color: Color(0xFF82BA53),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 20),
             ],
           ),
         ),
