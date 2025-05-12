@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
+import '../widgets/social_login_button.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
@@ -20,7 +21,9 @@ class RegistrationScreen extends StatelessWidget {
                 'assets/images/Logo.png',
                 height: 120,
               ),
+
               SizedBox(height: 20),
+
               // welcome text
               Text(
                 "Welcome to SipFresh",
@@ -32,6 +35,7 @@ class RegistrationScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20),
+
               // login button with navigation to login screen
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -47,6 +51,7 @@ class RegistrationScreen extends StatelessWidget {
                 },
                 child: Text("Log In", style: TextStyle(color: Colors.white)),
               ),
+
               SizedBox(height: 10),
 
               // signup button with navigation to sign up screen
@@ -71,6 +76,7 @@ class RegistrationScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20),
+
               // separator text for alternative login options
               Text(
                 "---------------Or---------------",
@@ -78,6 +84,22 @@ class RegistrationScreen extends StatelessWidget {
               ),
 
               SizedBox(height: 20),
+
+              // social login button for Google
+              SocialLoginButton(
+                iconPath: 'assets/google_icon.png',
+                text: "Continue with Google",
+                onTap: () {},
+              ),
+
+              SizedBox(height: 10),
+
+              // social login button for Facebook
+              SocialLoginButton(
+                iconPath: 'assets/facebook_icon.png',
+                text: "Continue with Facebook",
+                onTap: () {},
+              ),
             ],
           ),
         ),
