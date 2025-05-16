@@ -16,6 +16,24 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome back!",
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
