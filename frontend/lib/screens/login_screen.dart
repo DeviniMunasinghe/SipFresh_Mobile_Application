@@ -36,7 +36,16 @@ class LoginScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 5),
-              TextField()
+              TextField(
+                decoration: InputDecoration(
+                  hintText: "Type your email",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
+              ),
+              SizedBox(height: 15),
             ],
           ),
         ),
