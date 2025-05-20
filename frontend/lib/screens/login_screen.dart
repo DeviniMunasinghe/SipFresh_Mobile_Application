@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// import 'signup_screen.dart';
+// import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +16,7 @@ class LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Color(0xFF82BA53),
         title: Text(
@@ -24,70 +27,95 @@ class LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Welcome back!",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Email",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 5),
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Type your email",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              SizedBox(height: 15),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          Text(
+            "Welcome back!",
+            style: TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 20),
+          Text(
+            "Email",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          TextField(
+            decoration: InputDecoration(
+              hintText: "Type your email",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              filled: true,
+              fillColor: Colors.white,
+            ),
+          ),
+          SizedBox(height: 15),
 
-              // password field
-              Text(
-                "Password",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+          // password field
+          Text(
+            "Password",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 5),
+          TextField(
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              hintText: "Type your password",
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              filled: true,
+              fillColor: Colors.white,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                icon: Icon(_isPasswordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off),
               ),
-              SizedBox(height: 5),
-              TextField(
-                obscureText: !_isPasswordVisible,
-                decoration: InputDecoration(
-                  hintText: "Type your password",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  filled: true,
-                  fillColor: Colors.white,
-                  suffixIcon: IconButton(
-                    onPressed: () {
+            ),
+          ),
+          SizedBox(height: 10),
+          // remember me and forgot password row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: _rememberMe,
+                    activeColor: Colors.green,
+                    onChanged: (bool? value) {
                       setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
+                        _rememberMe = value ?? false;
                       });
                     },
-                    icon: Icon(_isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off),
                   ),
+                  Text("Remember me",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  // Forgot Password Action
+                },
+                child: Text(
+                  "Forgot password?",
+                  style: TextStyle(color: Colors.grey),
                 ),
               ),
-              SizedBox(height: 10)
             ],
           ),
-        ),
+        ],
       ),
     );
   }
