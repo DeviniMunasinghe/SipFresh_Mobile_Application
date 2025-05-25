@@ -6,6 +6,12 @@ exports.addItem = async (req, res) => {
   console.log("Add item request received");
 
   const { item_name, item_description, item_price, category_name } = req.body;
+  if (!req.file) {
+    return res.status(400).json({
+      message: "Item image is required",
+    });
+  }
+
   const item_image = `/images/menu/${req.file.filename}`;
 
   try {
