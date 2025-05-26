@@ -1,4 +1,5 @@
 const db = require("../../config/db");
+const { sendEmail } = require("../../utils/email-utils");
 
 exports.transferSelectedItemsToCheckout = async (req, res) => {
   const { selectedCartItemIds } = req.body;
@@ -14,26 +15,30 @@ exports.transferSelectedItemsToCheckout = async (req, res) => {
   console.log("Selected Cart Item IDs:", selectedCartItemIds);
 
   try {
+    // Create placeholders for each cart_item_id
     const placeholders = selectedCartItemIds.map(() => "?").join(",");
-    const query = `
-  UPDATE cart_items
-  SET selected = 1
-  WHERE cart_item_id IN (${placeholders})
-  AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = ?)
-`;
-    console.log("Executing query to update selected items:", query, [
+
+    // Update query with placeholders and userId at the end
+    const updateQuery = `
+      UPDATE cart_items
+      SET selected = 1
+      WHERE cart_item_id IN (${placeholders})
+      AND cart_id IN (SELECT cart_id FROM cart WHERE user_id = ?)
+    `;
+
+    // Execute update query with spread params (all selectedCartItemIds + userId)
+    console.log("Executing query to update selected items:", updateQuery, [
       ...selectedCartItemIds,
       userId,
     ]);
-    await db.execute(query, [...selectedCartItemIds, userId]);
+    await db.execute(updateQuery, [...selectedCartItemIds, userId]);
 
-    // Fetch selected items
+    // Now fetch all selected items for this user
     const [selectedItems] = await db.execute(
-      `SELECT ci.cart_item_id, ci.quantity, itm.item_id, itm.item_name, itm.item_price
-       FROM cart_items ci 
-       JOIN cart c ON ci.cart_id = c.cart_id 
-       JOIN item itm ON ci.item_id = itm.item_id 
-       WHERE ci.selected = 1  AND c.user_id = ? AND ci.is_deleted = 0`,
+      `SELECT ci.cart_item_id, ci.quantity, ci.item_id
+   FROM cart_items ci 
+   JOIN cart c ON ci.cart_id = c.cart_id 
+   WHERE ci.selected = 1 AND c.user_id = ? AND ci.is_deleted = 0`,
       [userId]
     );
 
@@ -63,11 +68,10 @@ exports.getSelectedItemsInCheckout = async (req, res) => {
   const userId = req.user.user_id;
   try {
     const [selectedItems] = await db.execute(
-      `SELECT ci.*, itm.item_name, itm.item_price, itm.item_image 
-       FROM cart_items ci 
-       JOIN cart c ON ci.cart_id = c.cart_id 
-       JOIN item itm ON ci.item_id = itm.item_id 
-       WHERE c.user_id = ? AND ci.is_deleted = 0 AND ci.selected = 1`,
+      `SELECT ci.cart_item_id, ci.quantity, ci.item_id
+   FROM cart_items ci 
+   JOIN cart c ON ci.cart_id = c.cart_id 
+   WHERE ci.selected = 1 AND c.user_id = ? AND ci.is_deleted = 0`,
       [userId]
     );
 
@@ -138,74 +142,83 @@ exports.removeItemsFromCheckout = async (req, res) => {
   }
 };
 
-// Calculate order summary for selected items in the cart
-exports.calculateOrderSummary = async (selectedCartItemIds) => {
-  if (
-    !selectedCartItemIds ||
-    !Array.isArray(selectedCartItemIds) ||
-    selectedCartItemIds.length === 0
-  ) {
-    throw new Error("Invalid or missing 'selectedCartItemIds'");
-  }
+// Helper Function
+const calculateSummaryFromCartItems = (cartItems) => {
+  const totalAmount = cartItems.reduce(
+    (sum, item) => sum + parseFloat(item.item_price) * item.quantity,
+    0
+  );
 
-  if (!Array.isArray(selectedCartItemIds) || selectedCartItemIds.length === 0) {
-    console.log("No items selected condition triggered.");
-    return res.status(400).json({ error: "No items selected" });
-  }
+  const discount = totalAmount * 0.1;
+  const finalAmount = totalAmount - discount;
 
+  return {
+    totalAmount: totalAmount.toFixed(2),
+    discountAmount: discount.toFixed(2),
+    finalAmount: finalAmount.toFixed(2),
+  };
+};
+
+exports.calculateOrderSummary = async (req, res) => {
   try {
-    const placeholders = selectedCartItemIds.map(() => "?").join(",");
-    const [selectedItems] = await db.execute(
-      `SELECT ci.quantity, itm.item_price, itm.item_name
-       FROM cart_items ci
-       JOIN item itm ON ci.item_id = itm.item_id
-       WHERE ci.cart_item_id IN (${placeholders}) AND ci.is_deleted = 0`,
-      selectedCartItemIds
-    );
+    const userId = req.user.user_id;
+    let { selectedCartItemIds } = req.body;
 
-    console.log("Selected items from database:", selectedItems);
+    console.log("User authenticated:", req.user);
+    console.log("Received selectedCartItemIds:", selectedCartItemIds);
 
-    if (selectedItems.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Selected items not found or already deleted" });
+    // Validate input
+    if (!selectedCartItemIds) {
+      return res.status(400).json({ error: "selectedCartItemIds is required" });
     }
 
-    // Check for an active promotion
-    const [promotion] = await db.execute(
-      `SELECT pr.discount_percentage 
-       FROM promotion p
-       JOIN promotion_rule pr ON p.promotion_id = pr.promotion_id
-       WHERE CURDATE() BETWEEN p.start_date AND p.end_date 
-       LIMIT 1`
+    // Convert to array if string
+    if (typeof selectedCartItemIds === "string") {
+      selectedCartItemIds = selectedCartItemIds
+        .split(",")
+        .map((id) => id.trim());
+    }
+
+    if (!Array.isArray(selectedCartItemIds)) {
+      return res
+        .status(400)
+        .json({ error: "selectedCartItemIds must be an array" });
+    }
+
+    //Get user's cart_id
+    const [cartRows] = await db.execute(
+      "SELECT cart_id FROM cart WHERE user_id = ? LIMIT 1",
+      [userId]
     );
-    const discountPercentage = promotion.length
-      ? promotion[0].discount_percentage
-      : 0;
 
-    let totalAmount = 0;
-    let totalQuantity = 0;
+    if (cartRows.length === 0) {
+      return res.status(400).json({ error: "Cart not found for user" });
+    }
 
-    selectedItems.forEach((item) => {
-      const quantity = item.quantity ?? 1; // Default to 1 if quantity is null
-      const { item_price } = item;
-      totalAmount += quantity * item_price;
-      totalQuantity += quantity;
-    });
+    const cartId = cartRows[0].cart_id;
 
-    const discountAmount = (totalAmount * discountPercentage) / 100;
-    const finalAmount = totalAmount - discountAmount;
+    // Get selected cart items with item price
+    const placeholders = selectedCartItemIds.map(() => "?").join(",");
+    const [cartItems] = await db.execute(
+      `
+        SELECT ci.*, i.item_price
+        FROM cart_items ci
+        JOIN item i ON ci.item_id = i.item_id
+        WHERE ci.cart_item_id IN (${placeholders}) AND ci.cart_id = ? AND ci.is_deleted = 0
+      `,
+      [...selectedCartItemIds, cartId]
+    );
 
-    console.log("Calculated Order Summary:", {
-      totalAmount,
-      discountAmount,
-      finalAmount,
-    });
+    if (cartItems.length === 0) {
+      return res.status(404).json({ error: "No cart items found" });
+    }
 
-    return { totalAmount, discountAmount, finalAmount };
-  } catch (err) {
-    console.error("Error while calculating order summary:", err);
-    res.status(500).json({ error: "Failed to calculate order summary" });
+    const summary = calculateSummaryFromCartItems(cartItems);
+
+    return res.status(200).json(summary);
+  } catch (error) {
+    console.error("Error in calculateOrderSummary:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -375,9 +388,8 @@ exports.placeOrder = async (req, res) => {
         .json({ error: "Some items have invalid or missing quantities." });
     }
 
-    // Calculate total amounts by calling the existing function
     const { totalAmount, discountAmount, finalAmount } =
-      await exports.calculateOrderSummary(selectedCartItemIds);
+      calculateSummaryFromCartItems(items);
 
     // Create a new order
     const [orderResult] = await connection.execute(
