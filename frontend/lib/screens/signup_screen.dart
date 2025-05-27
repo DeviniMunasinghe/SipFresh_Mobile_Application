@@ -146,7 +146,7 @@ class SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 5),
             TextFormField(
               controller: _confirmPasswordController,
-              obscureText: _isConfirmPasswordVisible,
+              obscureText: !_isConfirmPasswordVisible,
               decoration: InputDecoration(
                 hintText: "Confirm Password",
                 border:
