@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import '../widgets/social_login_button.dart';
+import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -189,12 +190,6 @@ class SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 20),
 
             // separator text for alternative login options
-            // Text(
-            //   "---------------Or---------------",
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(color: Colors.grey),
-            // ),
-
             Row(
               children: [
                 Expanded(
@@ -235,6 +230,34 @@ class SignUpScreenState extends State<SignUpScreen> {
               iconPath: 'assets/images/facebook_icon.png',
               text: "Continue with Facebook",
               onTap: () {},
+            ),
+
+            SizedBox(height: 20),
+
+            //if user have an account login option
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Have an Account?",
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()),
+                      );
+                    },
+                    child: Text(
+                      "Log in",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
