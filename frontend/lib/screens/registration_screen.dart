@@ -37,52 +37,107 @@ class RegistrationScreen extends StatelessWidget {
               SizedBox(height: 20),
 
               // login button with navigation to login screen
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF82BA53),
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              OutlinedButton(
+                style: ButtonStyle(
+                  minimumSize:
+                      WidgetStateProperty.all(Size(double.infinity, 50)),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  side: WidgetStateProperty.all(
+                    BorderSide(color: Color(0xFF82BA53)),
+                  ),
+                  foregroundColor:
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return Colors.white; // Text color on hover
+                    }
+                    return Color(0xFF82BA53); // Default text color
+                  }),
+                  backgroundColor:
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return Color(0xFF82BA53); // Fill color on hover
+                    }
+                    return Colors.transparent; // Default background
+                  }),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
                 },
-                child: Text("Log In", style: TextStyle(color: Colors.white)),
+                child: Text("Log In"),
               ),
 
               SizedBox(height: 10),
 
-              // signup button with navigation to sign up screen
+// signup button with navigation to sign up screen
               OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                style: ButtonStyle(
+                  minimumSize:
+                      WidgetStateProperty.all(Size(double.infinity, 50)),
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  side: BorderSide(color: Color(0xFF82BA53)),
+                  side: WidgetStateProperty.all(
+                    BorderSide(color: Color(0xFF82BA53)),
+                  ),
+                  foregroundColor:
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return Colors.white; // Text color on hover
+                    }
+                    return Color(0xFF82BA53); // Default text color
+                  }),
+                  backgroundColor:
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.hovered)) {
+                      return Color(0xFF82BA53); // Fill color on hover
+                    }
+                    return Colors.transparent; // Default background
+                  }),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpScreen()),
+                  );
                 },
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    color: Color(0xFF82BA53),
-                  ),
-                ),
+                child: Text("Sign Up"),
               ),
 
               SizedBox(height: 20),
 
               // separator text for alternative login options
-              Text(
-                "---------------Or---------------",
-                style: TextStyle(color: Colors.grey),
+              Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      "Or",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                    ),
+                  ),
+                ],
               ),
-
               SizedBox(height: 20),
 
               // social login button for Google
