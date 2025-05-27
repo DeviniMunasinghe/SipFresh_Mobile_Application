@@ -19,21 +19,19 @@ class RegistrationScreen extends StatelessWidget {
               // Logo
               Image.asset(
                 'assets/images/Logo.png',
-                height: 120,
+                height: 150,
               ),
-
               SizedBox(height: 20),
 
               // welcome text
               Text(
                 "Welcome to SipFresh",
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF82BA53),
                 ),
               ),
-
               SizedBox(height: 20),
 
               // login button with navigation to login screen
@@ -72,10 +70,9 @@ class RegistrationScreen extends StatelessWidget {
                 },
                 child: Text("Log In"),
               ),
-
               SizedBox(height: 10),
 
-// signup button with navigation to sign up screen
+              // signup button with navigation to sign up screen
               OutlinedButton(
                 style: ButtonStyle(
                   minimumSize:
@@ -111,7 +108,6 @@ class RegistrationScreen extends StatelessWidget {
                 },
                 child: Text("Sign Up"),
               ),
-
               SizedBox(height: 20),
 
               // separator text for alternative login options
@@ -146,7 +142,6 @@ class RegistrationScreen extends StatelessWidget {
                 text: "Continue with Google",
                 onTap: () {},
               ),
-
               SizedBox(height: 10),
 
               // social login button for Facebook
