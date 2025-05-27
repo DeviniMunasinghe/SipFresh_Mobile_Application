@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import '../widgets/social_login_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -219,6 +220,25 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
+            SizedBox(height: 20),
+
+            // social login button for Google
+            SocialLoginButton(
+              iconPath: 'assets/images/google_icon.png',
+              text: "Continue with Google",
+              onTap: () {},
+            ),
+
+            SizedBox(height: 10),
+
+            // social login button for Facebook
+            SocialLoginButton(
+              iconPath: 'assets/images/facebook_icon.png',
+              text: "Continue with Facebook",
+              onTap: () {},
+            ),
+
+            SizedBox(height: 20),
           ],
         ),
       ),
