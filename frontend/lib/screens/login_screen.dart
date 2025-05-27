@@ -56,6 +56,7 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       body: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
@@ -190,6 +191,33 @@ class LoginScreenState extends State<LoginScreen> {
               ),
               onPressed: _handleLogin,
               child: Text("Log In", style: TextStyle(color: Colors.white)),
+            ),
+
+            SizedBox(height: 20),
+
+            // separator text for alternative login options
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    "Or",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
