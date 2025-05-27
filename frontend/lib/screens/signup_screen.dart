@@ -134,7 +134,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 return null;
               },
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 15),
 
             // confirm password field
             Text(
