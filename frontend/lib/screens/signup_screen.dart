@@ -189,10 +189,34 @@ class SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 20),
 
             // separator text for alternative login options
-            Text(
-              "---------------Or---------------",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+            // Text(
+            //   "---------------Or---------------",
+            //   textAlign: TextAlign.center,
+            //   style: TextStyle(color: Colors.grey),
+            // ),
+
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    "Or",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                Expanded(
+                  child: Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
+                ),
+              ],
             ),
 
             SizedBox(height: 20),
