@@ -6,7 +6,12 @@ exports.addItem = async (req, res) => {
   console.log("Add item request received");
 
   const { item_name, item_description, item_price, category_name } = req.body;
-  const item_image = `/images/menu/${req.file.filename}`;
+
+  if (!req.file || !req.file.path) {
+    return res.status(400).json({ message: "Item image is required" });
+  }
+
+  const item_image = req.file.path;
 
   try {
     //Find category by name
@@ -107,7 +112,7 @@ exports.getItemById = async (req, res) => {
 exports.updateItem = async (req, res) => {
   const { item_id } = req.params;
   const { item_name, item_description, item_price, category_name } = req.body;
-  let item_image = req.file ? `/images/menu/${req.file.filename}` : null;
+  let item_image =  req.file ? req.file.path : null;
 
   try {
     // Find the category by name
