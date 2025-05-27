@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import '../widgets/social_login_button.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,7 +15,9 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
+
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   void dispose() {
@@ -26,14 +29,12 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   void _handleSignUp() {
     if (_formKey.currentState!.validate()) {
-      // Clear any previous error message
-
       // Navigate to HomeScreen
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-    } else {}
+    }
   }
 
   @override
@@ -43,7 +44,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         backgroundColor: Color(0xFF82BA53),
         title: Text(
-          "Sign up to SipFresh",
+          "Let's Sign up",
           style: TextStyle(
             fontSize: 22,
             color: Colors.white,
@@ -52,6 +53,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
@@ -144,14 +146,24 @@ class SignUpScreenState extends State<SignUpScreen> {
             SizedBox(height: 5),
             TextFormField(
               controller: _confirmPasswordController,
+              obscureText: _isConfirmPasswordVisible,
               decoration: InputDecoration(
                 hintText: "Confirm Password",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 filled: true,
                 fillColor: Colors.white,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                    });
+                  },
+                  icon: Icon(_isConfirmPasswordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off),
+                ),
               ),
-              obscureText: true,
               validator: (value) {
                 if (value != _passwordController.text) {
                   return 'Passwords do not match';
@@ -172,6 +184,33 @@ class SignUpScreenState extends State<SignUpScreen> {
               ),
               onPressed: _handleSignUp,
               child: Text("Sign Up", style: TextStyle(color: Colors.white)),
+            ),
+
+            SizedBox(height: 20),
+
+            // separator text for alternative login options
+            Text(
+              "---------------Or---------------",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
+
+            SizedBox(height: 20),
+
+            // social login button for Google
+            SocialLoginButton(
+              iconPath: 'assets/images/google_icon.png',
+              text: "Continue with Google",
+              onTap: () {},
+            ),
+
+            SizedBox(height: 10),
+
+            // social login button for Facebook
+            SocialLoginButton(
+              iconPath: 'assets/images/facebook_icon.png',
+              text: "Continue with Facebook",
+              onTap: () {},
             ),
           ],
         ),
