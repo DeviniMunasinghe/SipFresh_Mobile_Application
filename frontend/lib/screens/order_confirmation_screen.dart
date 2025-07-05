@@ -9,6 +9,7 @@ import '../widgets/complete_order_button.dart';
 import '../models/cart_item.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/order_success_dialog.dart'; 
+import 'order_details_screen.dart';
 
 class OrderConfirmationScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -94,12 +95,18 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             CompleteOrderButton( 
               onPressed: () {
                 // Show the order success dialog 
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return const OrderSuccessDialog();
-                  },
-                );
+                //showDialog(
+                  //context: context,
+                  //builder: (BuildContext context) {
+                    //return const OrderSuccessDialog();
+                  //},
+                //);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OrderDetailsScreen(),
+                      ),
+                    );
               },
             ),
           ],
