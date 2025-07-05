@@ -3,7 +3,14 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../models/cart_item.dart';
 
-class JuiceCategoryPage extends StatelessWidget {
+class JuiceCategoryPage extends StatefulWidget {
+  const JuiceCategoryPage({super.key});
+
+  @override
+  _JuiceCategoryPageState createState() => _JuiceCategoryPageState();
+}
+
+class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
   final List<Map<String, dynamic>> juiceCategories = [
     {"name": "Orange Juice", "image": "assets/images/juice1.png", "price": 299.43},
     {"name": "Apple Juice", "image": "assets/images/juice2.png", "price": 150.99},
@@ -17,13 +24,13 @@ class JuiceCategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Juice Categories'),
+        title: const Text('Juice Categories'),
         backgroundColor: Colors.orange,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.8,
             crossAxisSpacing: 10,
@@ -45,17 +52,22 @@ class JuiceCategoryPage extends StatelessWidget {
                     width: 80,
                     fit: BoxFit.cover,
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     juiceCategories[index]["name"]!,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     "\$${juiceCategories[index]["price"].toStringAsFixed(2)}",
-                    style: TextStyle(fontSize: 14, color: Colors.green),
+                    style: const TextStyle(fontSize: 14, color: Colors.green),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    ),
                     onPressed: () {
                       Provider.of<CartProvider>(context, listen: false).addToCart(
                         CartItem(
@@ -69,11 +81,11 @@ class JuiceCategoryPage extends StatelessWidget {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("${juiceCategories[index]['name']} added to cart!"),
-                          duration: Duration(seconds: 1),
+                          duration: const Duration(seconds: 1),
                         ),
                       );
                     },
-                    child: Text("Add to Cart"),
+                    child: const Text("Add to Cart"),
                   ),
                 ],
               ),
