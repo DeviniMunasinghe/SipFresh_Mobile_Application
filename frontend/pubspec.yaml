@@ -35,8 +35,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
+
   carousel_slider: ^5.0.0
   http: ^0.13.6
+
 
 dev_dependencies:
   flutter_test:
@@ -56,7 +58,11 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+
     - assets/images/homeImg/
+
+    - assets/images/default_avatar.png
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

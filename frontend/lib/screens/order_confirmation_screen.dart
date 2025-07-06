@@ -4,11 +4,11 @@ import '../widgets/shipping_address_card.dart';
 import '../widgets/contact_info_card.dart';
 import '../widgets/order_summary_two.dart';
 import '../widgets/billing_address_selection.dart';
-import '../widgets/shipping_method_card.dart'; 
-import '../widgets/complete_order_button.dart'; 
+import '../widgets/shipping_method_card.dart';
+import '../widgets/complete_order_button.dart';
 import '../models/cart_item.dart';
 import '../providers/cart_provider.dart';
-import '../widgets/order_success_dialog.dart'; 
+import '../widgets/order_success_dialog.dart';
 
 class OrderConfirmationScreen extends StatefulWidget {
   final List<CartItem> cartItems;
@@ -19,7 +19,8 @@ class OrderConfirmationScreen extends StatefulWidget {
   });
 
   @override
-  State<OrderConfirmationScreen> createState() => _OrderConfirmationScreenState();
+  State<OrderConfirmationScreen> createState() =>
+      _OrderConfirmationScreenState();
 }
 
 class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
@@ -41,23 +42,26 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     double discount = cartProvider.getDiscount();
     double total = subtotal + shippingCharges - discount;
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const Center(child: Text("Home Page")),
       const Center(child: Text("Categories Page")),
-      _buildOrderConfirmationContent(subtotal, shippingCharges, discount, total),
+      _buildOrderConfirmationContent(
+          subtotal, shippingCharges, discount, total),
       const Center(child: Text("Profile Page")),
     ];
 
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Categories"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag), label: "Categories"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
         currentIndex: _selectedIndex,
@@ -69,18 +73,19 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
     );
   }
 
-  Widget _buildOrderConfirmationContent(double subtotal, double shippingCharges, double discount, double total) {
+  Widget _buildOrderConfirmationContent(
+      double subtotal, double shippingCharges, double discount, double total) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ShippingAddressCard(), 
+            const ShippingAddressCard(),
             const SizedBox(height: 20),
-            const ContactInfoCard(), 
+            const ContactInfoCard(),
             const SizedBox(height: 20),
-            OrderSummaryTwo( 
+            OrderSummaryTwo(
               total: total,
               shippingCharges: shippingCharges,
               discount: discount,
@@ -91,9 +96,9 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
             const SizedBox(height: 20),
             ShippingMethodCard(totalAmount: total),
             const SizedBox(height: 20),
-            CompleteOrderButton( 
+            CompleteOrderButton(
               onPressed: () {
-                // Show the order success dialog 
+                // Show the order success dialog
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
