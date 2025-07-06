@@ -37,7 +37,7 @@ class JuiceCategoryPage extends StatelessWidget {
     },
   ];
 
-  const JuiceCategoryPage({super.key});
+  JuiceCategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
