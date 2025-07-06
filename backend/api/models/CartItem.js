@@ -14,6 +14,22 @@ class CartItem {
     }
   }
 
+  // Fetch all items in a cart by cart ID
+  static async getItemsByCartId(cartId) {
+    try {
+      const [rows] = await db.execute(
+        `SELECT ci.cart_item_id, ci.quantity, i.item_id, i.item_name, i.item_price, i.item_image
+       FROM cart_items ci
+       JOIN item i ON ci.item_id = i.item_id
+       WHERE ci.cart_id = ?`,
+        [cartId]
+      );
+      return rows;
+    } catch (error) {
+      throw new Error("Error fetching cart items: " + error.message);
+    }
+  }
+
   //Delete an item from the cart
   static async deleteItem(cartItemId) {
     try {

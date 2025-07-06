@@ -103,9 +103,11 @@ exports.addAdmin = async (req, res) => {
     address,
     role,
   } = req.body;
-  const user_image = req.file
-    ? `/images/user-image/${req.file.filename}`
-    : null;
+
+   if (!req.file || !req.file.path) {
+    return res.status(400).json({ message: "Admin image is required" });
+  }
+   const user_image = req.file.path;
 
   try {
     // Check for missing fields
