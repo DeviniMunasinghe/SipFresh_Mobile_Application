@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/social_login_button.dart';
 import 'signup_screen.dart';
-// import '../widgets/bottom_nav_bar.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -57,6 +57,12 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (_formKey.currentState!.validate()) {
       setState(() => _errorMessage = null);
+
+      // Navigate to BottomNavBar
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const BottomNavBar()),
+      );
     } else {
       setState(() => _errorMessage = 'Please enter valid email and password');
     }
