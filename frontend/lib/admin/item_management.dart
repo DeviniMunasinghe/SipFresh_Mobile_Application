@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ItemManagementPage extends StatefulWidget {
-  const ItemManagementPage({super.key});
+  const ItemManagementPage({Key? key}) : super(key: key);
 
   @override
   ItemManagementPageState createState() => ItemManagementPageState();
