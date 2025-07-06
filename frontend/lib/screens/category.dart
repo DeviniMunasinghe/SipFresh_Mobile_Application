@@ -5,13 +5,39 @@ import '../models/cart_item.dart';
 
 class JuiceCategoryPage extends StatelessWidget {
   final List<Map<String, dynamic>> juiceCategories = [
-    {"name": "Orange Juice", "image": "assets/images/juice1.png", "price": 299.43},
-    {"name": "Apple Juice", "image": "assets/images/juice2.png", "price": 150.99},
-    {"name": "Mango Juice", "image": "assets/images/juice1.png", "price": 320.00},
-    {"name": "Pineapple Juice", "image": "assets/images/juice2.png", "price": 275.00},
-    {"name": "Guava Juice", "image": "assets/images/juice1.png", "price": 250.00},
-    {"name": "Watermelon Juice", "image": "assets/images/juice2.png", "price": 180.00},
+    {
+      "name": "Orange Juice",
+      "image": "assets/images/juice1.png",
+      "price": 299.43
+    },
+    {
+      "name": "Apple Juice",
+      "image": "assets/images/juice2.png",
+      "price": 150.99
+    },
+    {
+      "name": "Mango Juice",
+      "image": "assets/images/juice1.png",
+      "price": 320.00
+    },
+    {
+      "name": "Pineapple Juice",
+      "image": "assets/images/juice2.png",
+      "price": 275.00
+    },
+    {
+      "name": "Guava Juice",
+      "image": "assets/images/juice1.png",
+      "price": 250.00
+    },
+    {
+      "name": "Watermelon Juice",
+      "image": "assets/images/juice2.png",
+      "price": 180.00
+    },
   ];
+
+  const JuiceCategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +83,8 @@ class JuiceCategoryPage extends StatelessWidget {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<CartProvider>(context, listen: false).addToCart(
+                      Provider.of<CartProvider>(context, listen: false)
+                          .addToCart(
                         CartItem(
                           name: juiceCategories[index]["name"]!,
                           price: juiceCategories[index]["price"],
@@ -68,7 +95,8 @@ class JuiceCategoryPage extends StatelessWidget {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("${juiceCategories[index]['name']} added to cart!"),
+                          content: Text(
+                              "${juiceCategories[index]['name']} added to cart!"),
                           duration: Duration(seconds: 1),
                         ),
                       );
