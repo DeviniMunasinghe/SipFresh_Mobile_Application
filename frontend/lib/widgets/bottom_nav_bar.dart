@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/home_screen.dart';
 import '../screens/cart_screen.dart';
+import '../screens/profile_screen.dart';
 import '../screens/category.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -11,19 +12,20 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  int _selectedIndex = 0; 
+  int _selectedIndex = 0;
 
   // List of pages for navigation
   final List<Widget> _pages = [
     const HomeScreen(),
     JuiceCategoryPage(),
     const CartScreen(),
-    const Center(child: Text("Profile Page")), 
+    const ProfileScreen()
+    // const Center(child: Text("Profile Page")),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; 
+      _selectedIndex = index;
     });
   }
 
@@ -37,8 +39,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag), label: "Categories"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: "Cart"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag), label: "Categories"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart), label: "Cart"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
         currentIndex: _selectedIndex,

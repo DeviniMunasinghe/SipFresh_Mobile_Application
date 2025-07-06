@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
 import '../widgets/social_login_button.dart';
 import 'signup_screen.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +14,11 @@ class LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
+  bool _emailTouched = false;
+  bool _passwordTouched = false;
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
 
@@ -21,21 +26,42 @@ class LoginScreenState extends State<LoginScreen> {
   String? _errorMessage;
 
   @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        setState(() => _emailTouched = true);
+      }
+    });
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        setState(() => _passwordTouched = true);
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
   void _handleLogin() {
+    setState(() {
+      _emailTouched = true;
+      _passwordTouched = true;
+    });
+
     if (_formKey.currentState!.validate()) {
-      // Clear any previous error message
       setState(() => _errorMessage = null);
 
-      // Navigate to home screen
-      Navigator.push(
+      // Navigate to BottomNavBar
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const BottomNavBar()),
       );
     } else {
       setState(() => _errorMessage = 'Please enter valid email and password');
@@ -47,22 +73,18 @@ class LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Color(0xFF82BA53),
-        title: Text(
+        backgroundColor: const Color(0xFF82BA53),
+        title: const Text(
           "Login to SipFresh",
-          style: TextStyle(
-            fontSize: 22,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 22, color: Colors.white),
         ),
       ),
       body: Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            Text(
+            const Text(
               "Welcome back!",
               style: TextStyle(
                 fontSize: 26,
@@ -70,16 +92,18 @@ class LoginScreenState extends State<LoginScreen> {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Email Field
-            Text(
-              "Email",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 5),
+            const Text("Email",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
             TextFormField(
               controller: _emailController,
+              focusNode: _emailFocusNode,
+              autovalidateMode: _emailTouched
+                  ? AutovalidateMode.always
+                  : AutovalidateMode.disabled,
               decoration: InputDecoration(
                 hintText: "Type your email",
                 border:
@@ -97,20 +121,19 @@ class LoginScreenState extends State<LoginScreen> {
                 return null;
               },
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
 
-            // password field
-            Text(
-              "Password",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 5),
+            // Password Field
+            const Text("Password",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
             TextFormField(
               controller: _passwordController,
+              focusNode: _passwordFocusNode,
               obscureText: !_isPasswordVisible,
+              autovalidateMode: _passwordTouched
+                  ? AutovalidateMode.always
+                  : AutovalidateMode.disabled,
               decoration: InputDecoration(
                 hintText: "Type your password",
                 border:
@@ -123,24 +146,25 @@ class LoginScreenState extends State<LoginScreen> {
                       _isPasswordVisible = !_isPasswordVisible;
                     });
                   },
-                  icon: Icon(_isPasswordVisible
-                      ? Icons.visibility
-                      : Icons.visibility_off),
+                  icon: Icon(
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
                 ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Password is required';
-                }
-                if (value.length < 6) {
+                } else if (value.length < 6) {
                   return 'Password must be at least 6 characters';
                 }
                 return null;
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-            // remember me and forgot password row
+            // Remember me and forgot password
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -149,27 +173,25 @@ class LoginScreenState extends State<LoginScreen> {
                     Checkbox(
                       value: _rememberMe,
                       activeColor: Colors.green,
-                      onChanged: (bool? value) {
+                      onChanged: (value) {
                         setState(() => _rememberMe = value ?? false);
                       },
                     ),
-                    Text("Remember me",
+                    const Text("Remember me",
                         style: TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
                 TextButton(
                   onPressed: () {
-                    // Forgot Password Action
+                    // Forgot password logic
                   },
-                  child: Text(
-                    "Forgot password?",
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  child: const Text("Forgot password?",
+                      style: TextStyle(color: Colors.grey)),
                 ),
               ],
             ),
 
-            // Error message (if any)
+            // Error message
             if (_errorMessage != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -180,91 +202,69 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // Login Button
             ElevatedButton(
+              onPressed: _handleLogin,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF82BA53),
-                minimumSize: Size(double.infinity, 50),
+                backgroundColor: const Color(0xFF82BA53),
+                minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              onPressed: _handleLogin,
-              child: Text("Log In", style: TextStyle(color: Colors.white)),
+              child:
+                  const Text("Log In", style: TextStyle(color: Colors.white)),
             ),
 
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            // separator text for alternative login options
+            // Divider
             Row(
-              children: [
-                Expanded(
-                  child: Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                ),
+              children: const [
+                Expanded(child: Divider(color: Colors.grey, thickness: 1)),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    "Or",
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text("Or", style: TextStyle(color: Colors.grey)),
                 ),
-                Expanded(
-                  child: Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                ),
+                Expanded(child: Divider(color: Colors.grey, thickness: 1)),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            // social login button for Google
+            // Social Login
             SocialLoginButton(
               iconPath: 'assets/images/google_icon.png',
               text: "Continue with Google",
               onTap: () {},
             ),
-
-            SizedBox(height: 10),
-
-            // social login button for Facebook
+            const SizedBox(height: 10),
             SocialLoginButton(
               iconPath: 'assets/images/facebook_icon.png',
               text: "Continue with Facebook",
               onTap: () {},
             ),
+            const SizedBox(height: 20),
 
-            SizedBox(height: 20),
-
-            //if user do not have an account sign in option
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Don't have an Account?",
-                    style: TextStyle(color: Colors.grey[700]),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SignUpScreen()),
-                      );
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ),
-                ],
-              ),
+            // Sign up link
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Don't have an Account?",
+                    style: TextStyle(color: Colors.grey[700])),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpScreen()),
+                    );
+                  },
+                  child: const Text("Sign Up",
+                      style: TextStyle(color: Colors.blue)),
+                ),
+              ],
             ),
           ],
         ),
