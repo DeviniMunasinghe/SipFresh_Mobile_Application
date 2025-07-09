@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
 import '../widgets/social_login_button.dart';
 import 'login_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -30,62 +30,77 @@ class SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  //mock success
   void _handleSignUp() async {
     if (_formKey.currentState!.validate()) {
-      final url = Uri.parse(
-          'https://sip-fresh-backend-new.vercel.app/api/auth/register');
+      // Simulate delay like real network call
+      await Future.delayed(const Duration(seconds: 1));
 
-      try {
-        final response = await http.post(
-          url,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'username':
-                'SipFreshUser', // you can add a username field if needed
-            'email': _emailController.text.trim(),
-            'password': _passwordController.text.trim(),
-            'confirmPassword': _confirmPasswordController.text.trim(),
-          }),
-        );
-
-        // 👇 Add this line to print the response from the backend
-        // ignore: avoid_print
-        print('Response: ${response.body}');
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          // Success: Navigate to BottomNavBar
-          Navigator.pushReplacement(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(builder: (context) => const BottomNavBar()),
-          );
-        } else {
-          // Show error message from backend
-          final Map<String, dynamic> resBody = jsonDecode(response.body);
-          final errorMessage = resBody['message'] ?? 'Registration failed';
-          _showErrorDialog(errorMessage);
-        }
-      } catch (e) {
-        _showErrorDialog('Failed to connect. Please try again later.');
-      }
+      // Navigate to BottomNavBar directly
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const BottomNavBar()),
+      );
     }
   }
 
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () => Navigator.of(ctx).pop(),
-          )
-        ],
-      ),
-    );
-  }
+//backend integration
+  // void _handleSignUp() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final url = Uri.parse(
+  //         'https://sip-fresh-backend-new.vercel.app/api/auth/register');
+
+  //     try {
+  //       final response = await http.post(
+  //         url,
+  //         headers: {'Content-Type': 'application/json'},
+  //         body: jsonEncode({
+  //           'username':
+  //               'SipFreshUser', // you can add a username field if needed
+  //           'email': _emailController.text.trim(),
+  //           'password': _passwordController.text.trim(),
+  //           'confirmPassword': _confirmPasswordController.text.trim(),
+  //         }),
+  //       );
+
+  //       // 👇 Add this line to print the response from the backend
+  //       // ignore: avoid_print
+  //       print('Response: ${response.body}');
+
+  //       if (response.statusCode == 200 || response.statusCode == 201) {
+  //         // Success: Navigate to BottomNavBar
+  //         Navigator.pushReplacement(
+  //           // ignore: use_build_context_synchronously
+  //           context,
+  //           MaterialPageRoute(builder: (context) => const BottomNavBar()),
+  //         );
+  //       } else {
+  //         // Show error message from backend
+  //         final Map<String, dynamic> resBody = jsonDecode(response.body);
+  //         final errorMessage = resBody['message'] ?? 'Registration failed';
+  //         _showErrorDialog(errorMessage);
+  //       }
+  //     } catch (e) {
+  //       _showErrorDialog('Failed to connect. Please try again later.');
+  //     }
+  //   }
+  // }
+
+  // void _showErrorDialog(String message) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: const Text('Error'),
+  //       content: Text(message),
+  //       actions: [
+  //         TextButton(
+  //           child: const Text('OK'),
+  //           onPressed: () => Navigator.of(ctx).pop(),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
