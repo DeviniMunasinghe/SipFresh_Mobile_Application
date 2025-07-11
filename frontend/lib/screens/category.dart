@@ -20,9 +20,15 @@ class JuiceCategoryPage extends StatelessWidget {
         child: Center(
           child: Column(
             children: const [
-              ProductDescription(name: "Orange juice"),
+              ProductDescription(name: "Orange Juice"),
               SizedBox(height: 12),
-              ProductImage(imagePath: 'assets/images/orange_juice.png'),
+              ProductImage(
+                imagePaths: [
+                  'assets/images/juice1.png',
+                  'assets/images/juice2.png',
+                  'assets/images/juice3.png',
+                ],
+              ),
               SizedBox(height: 12),
               Text(
                 'Fresh and tasty, full of natural sweetness and a splash of vitamin C.',
@@ -37,8 +43,7 @@ class JuiceCategoryPage extends StatelessWidget {
           ),
         ),
       ),
-      //bottomNavigationBar: const BottomNavBar(currentIndex: 1),
-      
+      // bottomNavigationBar: const BottomNavBar(currentIndex: 1),
     );
   }
 }
