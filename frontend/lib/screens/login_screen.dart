@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
 import '../widgets/social_login_button.dart';
 import 'signup_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -49,16 +51,18 @@ class LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
+// Mock success: Navigate to BottomNavBar directly
+  void _handleLogin() async {
     setState(() {
       _emailTouched = true;
       _passwordTouched = true;
     });
 
     if (_formKey.currentState!.validate()) {
-      setState(() => _errorMessage = null);
+      // Simulate a delay like real network
+      await Future.delayed(const Duration(seconds: 1));
 
-      // Navigate to BottomNavBar
+      // Mock success: Navigate to BottomNavBar directly
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const BottomNavBar()),
@@ -67,6 +71,45 @@ class LoginScreenState extends State<LoginScreen> {
       setState(() => _errorMessage = 'Please enter valid email and password');
     }
   }
+
+  //backend integration
+  // void _handleLogin() async {
+  //   setState(() {
+  //     _emailTouched = true;
+  //     _passwordTouched = true;
+  //   });
+
+  //   if (_formKey.currentState!.validate()) {
+  //     final url =
+  //         Uri.parse('https://sip-fresh-backend-new.vercel.app/api/auth/login');
+
+  //     final response = await http.post(
+  //       url,
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode({
+  //         'email': _emailController.text.trim(),
+  //         'password': _passwordController.text.trim(),
+  //       }),
+  //     );
+
+  //     print('Response: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       // Success → Navigate to BottomNavBar
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => const BottomNavBar()),
+  //       );
+  //     } else {
+  //       final error = jsonDecode(response.body)['message'] ?? 'Login failed';
+  //       setState(() {
+  //         _errorMessage = error;
+  //       });
+  //     }
+  //   } else {
+  //     setState(() => _errorMessage = 'Please enter valid email and password');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

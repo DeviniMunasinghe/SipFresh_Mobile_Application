@@ -3,6 +3,28 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'order_details_screen.dart';
 import 'profile_screen.dart';
 import 'cart_screen.dart';
+import 'category.dart';
+import '../widgets/juice_card.dart';
+import '../widgets/category_card.dart';
+
+// cateogory list
+final List<Map<String, dynamic>> categories = [
+  {
+    'title': 'Fresh Juices',
+    'imagePath': 'assets/images/juice2.png',
+    'screen': const JuiceCategoryPage(),
+  },
+  {
+    'title': 'Salads',
+    'imagePath': 'assets/images/juice2.png',
+    'screen': const JuiceCategoryPage(),
+  },
+  {
+    'title': 'Others',
+    'imagePath': 'assets/images/juice2.png',
+    'screen': const JuiceCategoryPage(),
+  },
+];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,15 +38,16 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _searchController.dispose(); // Clean up the controller
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Color(0xFF82BA53),
+        backgroundColor: const Color(0xFF82BA53),
         title: const Text(
           "Sip Fresh",
           style: TextStyle(
@@ -32,50 +55,39 @@ class HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-        // leading: Icon(Icons.home, color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_outline, color: Colors.white),
+            icon: const Icon(Icons.person_outline, color: Colors.white),
             onPressed: () {
-              // Navigate to profile
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen()));
             },
           ),
           IconButton(
-            icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
             onPressed: () {
-              // Navigate to cart
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CartScreen()),
-              );
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CartScreen()));
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: () {
-              // Navigate to notifications
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const NotificationScreen()),
-              // );
-            },
+            icon: const Icon(Icons.notifications_none, color: Colors.white),
+            onPressed: () {},
           ),
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // searchbar
+            // Search bar
             Container(
-              margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: Color(0xFFF5F5F5), // Light background
+                color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(30),
               ),
               child: TextField(
@@ -83,9 +95,9 @@ class HomeScreenState extends State<HomeScreen> {
                 decoration: InputDecoration(
                   hintText: 'What do you want to drink?',
                   border: InputBorder.none,
-                  icon: Icon(Icons.search, color: Colors.grey),
+                  icon: const Icon(Icons.search, color: Colors.grey),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.close, color: Colors.grey),
+                    icon: const Icon(Icons.close, color: Colors.grey),
                     onPressed: () {
                       setState(() {
                         _searchController.clear();
@@ -95,59 +107,172 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
 
-            const SizedBox(height: 10),
-
-            //img slider
-            CarouselSlider(
-              items: [
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage1.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage2.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage3.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage4.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage1.jpg'),
-              ],
-
-              //Slider Container properties
-              options: CarouselOptions(
-                height: 200.0,
-                enlargeCenterPage: true,
-                autoPlay: true,
-                aspectRatio: 16 / 9,
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enableInfiniteScroll: true,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                viewportFraction: 0.8,
-              ),
-            ),
-
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            // Offer Banner with Carousel Background
+            SizedBox(
+              height: 180,
+              child: Stack(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigates to the OrderDetailsScreen when the button is pressed
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const OrderDetailsScreen()),
+                  CarouselSlider(
+                    items: [
+                      'assets/images/homeImg/SliderImage1.jpg',
+                      'assets/images/homeImg/SliderImage2.jpg',
+                      'assets/images/homeImg/SliderImage3.jpg',
+                    ].map((imagePath) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
                       );
-                    },
-                    child: const Text("Go to Order Details"),
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: 180,
+                      viewportFraction: 1.0,
+                      autoPlay: true,
+                      enlargeCenterPage: false,
+                    ),
+                  ),
+
+                  // Overlayed Hello Text and Button
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          colors: [
+                            // ignore: deprecated_member_use
+                            Colors.black.withOpacity(0.3),
+                            // ignore: deprecated_member_use
+                            Colors.black.withOpacity(0.1),
+                          ],
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    left: 16,
+                    top: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Hello!",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const Text(
+                          "Grab Your Healthy Juice",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.green,
+                          ),
+                          child: const Text("Buy Now"),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+
+            const SizedBox(height: 24),
+
+            // Available Today
+            sectionHeader("Available Today"),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (_, index) => JuiceCardWidget(
+                  imagePath: "assets/images/juice1.png",
+                  // 'assets/images/juice1.png${index + 1}.png', // or static image
+                  title: 'Mix Fruit Juice',
+                  price: 170.00,
+                  onTap: () {
+                    // Optional: handle click
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Categories
+            sectionHeader("Categories"),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 250,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return CategoryCard(
+                    title: category['title'],
+                    imagePath: category['imagePath'],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => category['screen']),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            const SizedBox(height: 16),
+
+            // Go to Order Details Button
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const OrderDetailsScreen()),
+                  );
+                },
+                child: const Text("Go to Order Details"),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget sectionHeader(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text("See all", style: TextStyle(color: Colors.green)),
+      ],
     );
   }
 }
@@ -160,7 +285,7 @@ class SliderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(6.0),
+      margin: const EdgeInsets.all(6.0),
       height: 150,
       width: double.infinity,
       decoration: BoxDecoration(
