@@ -246,19 +246,7 @@ class HomeScreenState extends State<HomeScreen> {
 
             const SizedBox(height: 16),
 
-            // Go to Order Details Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const OrderDetailsScreen()),
-                  );
-                },
-                child: const Text("Go to Order Details"),
-              ),
-            ),
+            
           ],
         ),
       ),
