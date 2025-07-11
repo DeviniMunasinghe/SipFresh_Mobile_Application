@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class ProductImage extends StatefulWidget {
   final List<String> imagePaths;
-  const ProductImage({super.key, required this.imagePaths});
+  final ValueChanged<int>? onImageChanged; // <-- callback
+
+  const ProductImage({
+    super.key,
+    required this.imagePaths,
+    this.onImageChanged, // <-- optional
+  });
 
   @override
   State<ProductImage> createState() => _ProductImageState();
@@ -58,6 +64,11 @@ class _ProductImageState extends State<ProductImage> {
               setState(() {
                 _currentIndex = index;
               });
+
+              // Notify parent if callback is provided
+              if (widget.onImageChanged != null) {
+                widget.onImageChanged!(index);
+              }
             },
             itemBuilder: (context, index) {
               return Padding(
@@ -74,7 +85,6 @@ class _ProductImageState extends State<ProductImage> {
             },
           ),
         ),
-
         Positioned(
           left: 8,
           child: IconButton(
@@ -82,7 +92,6 @@ class _ProductImageState extends State<ProductImage> {
             onPressed: _previousPage,
           ),
         ),
-
         Positioned(
           right: 8,
           child: IconButton(
