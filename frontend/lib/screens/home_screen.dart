@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'order_details_screen.dart';
 import 'profile_screen.dart';
 import 'cart_screen.dart';
 import 'category.dart';
@@ -10,18 +9,18 @@ import '../widgets/category_card.dart';
 // cateogory list
 final List<Map<String, dynamic>> categories = [
   {
-    'title': 'Fresh Juices',
-    'imagePath': 'assets/images/juice2.png',
+    'title': 'Fruit Juice',
+    'imagePath': 'assets/images/categoryImg/Fruit Juice.jpg',
     'screen': const JuiceCategoryPage(),
   },
   {
-    'title': 'Salads',
-    'imagePath': 'assets/images/juice2.png',
+    'title': 'Smoothies',
+    'imagePath': 'assets/images/categoryImg/Smoothies.jpg',
     'screen': const JuiceCategoryPage(),
   },
   {
-    'title': 'Others',
-    'imagePath': 'assets/images/juice2.png',
+    'title': 'Wellness Drinks',
+    'imagePath': 'assets/images/categoryImg/Wellness Drinks.jpg',
     'screen': const JuiceCategoryPage(),
   },
 ];
@@ -146,9 +145,7 @@ class HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                         gradient: LinearGradient(
                           colors: [
-                            // ignore: deprecated_member_use
                             Colors.black.withOpacity(0.3),
-                            // ignore: deprecated_member_use
                             Colors.black.withOpacity(0.1),
                           ],
                           begin: Alignment.bottomCenter,
@@ -207,7 +204,7 @@ class HomeScreenState extends State<HomeScreen> {
                 itemCount: 5,
                 itemBuilder: (_, index) => JuiceCardWidget(
                   imagePath: "assets/images/juice1.png",
-                  // 'assets/images/juice1.png${index + 1}.png', // or static image
+                  key: ValueKey(index),
                   title: 'Mix Fruit Juice',
                   price: 170.00,
                   onTap: () {
@@ -219,34 +216,33 @@ class HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
 
             // Categories
-            sectionHeader("Categories"),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 250,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  final category = categories[index];
-                  return CategoryCard(
-                    title: category['title'],
-                    imagePath: category['imagePath'],
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => category['screen']),
-                      );
-                    },
-                  );
-                },
-              ),
+            const Text(
+              "Categories",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-
-            const SizedBox(height: 24),
-
-            const SizedBox(height: 16),
-
-            
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: categories.map((category) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: CategoryCard(
+                      title: category['title'],
+                      imagePath: category['imagePath'],
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => category['screen'] as Widget,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
@@ -261,28 +257,6 @@ class HomeScreenState extends State<HomeScreen> {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const Text("See all", style: TextStyle(color: Colors.green)),
       ],
-    );
-  }
-}
-
-class SliderImage extends StatelessWidget {
-  final String imagePath;
-
-  const SliderImage({required this.imagePath, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(6.0),
-      height: 150,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
-      ),
     );
   }
 }

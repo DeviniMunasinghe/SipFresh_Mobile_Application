@@ -74,7 +74,9 @@ class LoginScreenState extends State<LoginScreen> {
   //   }
   // }
 
+
   //backend integration
+
   void _handleLogin() async {
     setState(() {
       _emailTouched = true;
@@ -97,6 +99,7 @@ class LoginScreenState extends State<LoginScreen> {
       print('Response: ${response.body}');
 
       if (response.statusCode == 200) {
+
          final responseData = jsonDecode(response.body);
 
       // ✅ Extract the token
@@ -108,6 +111,7 @@ class LoginScreenState extends State<LoginScreen> {
         print('[Login] Token saved: $token');
       }
         
+
         // Success → Navigate to BottomNavBar
         Navigator.pushReplacement(
           context,
