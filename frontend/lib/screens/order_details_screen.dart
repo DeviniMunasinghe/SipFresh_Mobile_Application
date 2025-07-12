@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/order_success_dialog.dart'; // Make sure this file exists
 
-
-// Stateful widget for the Order Details screen
 class OrderDetailsScreen extends StatefulWidget {
   const OrderDetailsScreen({super.key});
 
@@ -11,53 +10,79 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-  // Boolean variable to track if the user wants to save the address
   bool saveAddress = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFDCEAE5), // Light green background
+      backgroundColor: const Color(0xFFDCEAE5),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF86BC5E), // Green app bar
-        title: const Text("Order details form"), // Title of the app bar
+        backgroundColor: const Color(0xFF86BC5E),
+        title: const Text("Order details form"),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back), // Back button icon
-          onPressed: () => Navigator.pop(context), // Navigates back when pressed
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0), // Adds padding around the form
-        child: Column(
-          children: [
-            // Custom text fields for user input
-            CustomTextField(icon: Icons.person, hintText: "First Name"),
-            CustomTextField(icon: Icons.person, hintText: "Last Name"),
-            CustomTextField(icon: Icons.email, hintText: "Email address"),
-            CustomTextField(icon: Icons.phone, hintText: "Phone number"),
-            CustomTextField(icon: Icons.location_on, hintText: "Address"),
-            CustomTextField(icon: Icons.home, hintText: "Zip code"),
-            const SizedBox(height: 10), // Adds spacing between fields and switch
-
-            // Row containing a switch and text label
-            Row(
-              children: [
-                Switch(
-                  value: saveAddress, // Reflects the current state of the switch
-                  onChanged: (value) {
-                    setState(() {
-                      saveAddress = value; // Updates the state when switched
-                    });
-                  },
-                  activeColor: Colors.green, // Switch color when active
-                ),
-                const Text("Save this address"), // Label for the switch
-              ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(icon: Icons.person, hintText: "First Name"),
+              CustomTextField(icon: Icons.person, hintText: "Last Name"),
+              CustomTextField(icon: Icons.email, hintText: "Email address"),
+              CustomTextField(icon: Icons.phone, hintText: "Phone number"),
+              CustomTextField(icon: Icons.location_on, hintText: "Address"),
+              CustomTextField(icon: Icons.home, hintText: "Zip code"),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Switch(
+                    value: saveAddress,
+                    onChanged: (value) {
+                      setState(() {
+                        saveAddress = value;
+                      });
+                    },
+                    activeColor: Colors.green,
+                  ),
+                  const Text("Save this address"),
+                ],
+              ),
+              const SizedBox(height: 80),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          height: 50,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4CAF50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-          ],
+            onPressed: () {
+              // ✅ Show the order success dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const OrderSuccessDialog();
+                },
+              );
+            },
+            child: const Text(
+              "Confirm Order",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
       ),
-     
     );
   }
 }
