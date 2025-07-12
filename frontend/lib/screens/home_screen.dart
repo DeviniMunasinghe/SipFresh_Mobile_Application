@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'order_details_screen.dart';
 import 'profile_screen.dart';
 import 'cart_screen.dart';
@@ -16,7 +15,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _searchController.dispose(); // Clean up the controller
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -24,7 +23,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF82BA53),
+        backgroundColor: const Color(0xFF82BA53),
         title: const Text(
           "Sip Fresh",
           style: TextStyle(
@@ -32,12 +31,10 @@ class HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-        // leading: Icon(Icons.home, color: Colors.white),
         actions: [
           IconButton(
-            icon: Icon(Icons.person_outline, color: Colors.white),
+            icon: const Icon(Icons.person_outline, color: Colors.white),
             onPressed: () {
-              // Navigate to profile
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ProfileScreen()),
@@ -45,9 +42,8 @@ class HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.shopping_cart_outlined, color: Colors.white),
+            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
             onPressed: () {
-              // Navigate to cart
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const CartScreen()),
@@ -55,13 +51,9 @@ class HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications_none, color: Colors.white),
+            icon: const Icon(Icons.notifications_none, color: Colors.white),
             onPressed: () {
-              // Navigate to notifications
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => const NotificationScreen()),
-              // );
+              // Future notification screen
             },
           ),
         ],
@@ -70,12 +62,12 @@ class HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // searchbar
+            // Search bar
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
-                color: Color(0xFFF5F5F5), // Light background
+                color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(30),
               ),
               child: TextField(
@@ -83,9 +75,9 @@ class HomeScreenState extends State<HomeScreen> {
                 decoration: InputDecoration(
                   hintText: 'What do you want to drink?',
                   border: InputBorder.none,
-                  icon: Icon(Icons.search, color: Colors.grey),
+                  icon: const Icon(Icons.search, color: Colors.grey),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.close, color: Colors.grey),
+                    icon: const Icon(Icons.close, color: Colors.grey),
                     onPressed: () {
                       setState(() {
                         _searchController.clear();
@@ -95,36 +87,7 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
-            //img slider
-            CarouselSlider(
-              items: [
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage1.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage2.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage3.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage4.jpg'),
-                SliderImage(
-                    imagePath: 'assets/images/homeImg/SliderImage1.jpg'),
-              ],
-
-              //Slider Container properties
-              options: CarouselOptions(
-                height: 200.0,
-                enlargeCenterPage: true,
-                autoPlay: true,
-                aspectRatio: 16 / 9,
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enableInfiniteScroll: true,
-                autoPlayAnimationDuration: Duration(milliseconds: 800),
-                viewportFraction: 0.8,
-              ),
-            ),
 
             Center(
               child: Column(
@@ -132,7 +95,6 @@ class HomeScreenState extends State<HomeScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Navigates to the OrderDetailsScreen when the button is pressed
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -160,7 +122,7 @@ class SliderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(6.0),
+      margin: const EdgeInsets.all(6.0),
       height: 150,
       width: double.infinity,
       decoration: BoxDecoration(
