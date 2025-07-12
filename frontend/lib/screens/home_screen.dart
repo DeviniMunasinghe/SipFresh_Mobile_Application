@@ -244,6 +244,7 @@ class HomeScreenState extends State<HomeScreen> {
                           price: double.tryParse(
                                   item['item_price']?.toString() ?? '0.0') ??
                               0.0,
+                          itemId: item['item_id'],
                         );
                       },
                     ),
