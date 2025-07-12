@@ -6,6 +6,9 @@ class CartItemWidget extends StatelessWidget {
   final VoidCallback onRemove;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
+  final VoidCallback onToggleSelection;
+  final bool isSelected;
+  final ValueChanged<bool?> onSelected;
 
   const CartItemWidget({
     super.key,
@@ -13,6 +16,9 @@ class CartItemWidget extends StatelessWidget {
     required this.onRemove,
     required this.onIncrement,
     required this.onDecrement,
+    required this.onToggleSelection,
+    required this.isSelected,
+  required this.onSelected,
   });
 
   @override
@@ -23,6 +29,14 @@ class CartItemWidget extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
+            // ✅ Checkbox
+            Checkbox(
+              value: item.isSelected,
+              onChanged: (_) => onToggleSelection(),
+              activeColor: Colors.green,
+            ),
+
+            // ✅ Product Image
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Image.network(
@@ -42,7 +56,10 @@ class CartItemWidget extends StatelessWidget {
                 },
               ),
             ),
+
             const SizedBox(width: 12),
+
+            // ✅ Product Name & Price
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,6 +75,8 @@ class CartItemWidget extends StatelessWidget {
                 ],
               ),
             ),
+
+            // ✅ Quantity controls
             Row(
               children: [
                 IconButton(
@@ -71,6 +90,8 @@ class CartItemWidget extends StatelessWidget {
                 ),
               ],
             ),
+
+            // ✅ Delete button
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: onRemove,
