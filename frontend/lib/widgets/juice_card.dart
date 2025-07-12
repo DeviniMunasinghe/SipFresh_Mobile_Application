@@ -14,7 +14,7 @@ class JuiceCardWidget extends StatelessWidget {
     required this.title,
     required this.price,
     this.onTap,
-    this.imageHeight = 100, // 👈 default height
+    this.imageHeight = 100, // default height
   });
 
   @override
@@ -45,7 +45,7 @@ class JuiceCardWidget extends StatelessWidget {
                     const BorderRadius.vertical(top: Radius.circular(20)),
                 child: Image.network(
                   imagePath,
-                  height: imageHeight, // 👈 use the parameter
+                  height: imageHeight, // use the parameter
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
