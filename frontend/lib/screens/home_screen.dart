@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'order_details_screen.dart';
 import 'profile_screen.dart';
 import 'cart_screen.dart';
 import 'category.dart';
@@ -244,8 +243,6 @@ class HomeScreenState extends State<HomeScreen> {
                 );
               }).toList(),
             ),
-
-            const SizedBox(height: 24),
           ],
         ),
       ),
