@@ -54,15 +54,28 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+  // ✅ Toggle checkbox selection
+  void toggleItemSelection(int index) {
+    final current = _cartItems[index];
+    _cartItems[index] = current.copyWith(isSelected: !current.isSelected);
+    notifyListeners();
+  }
+
+  // ✅ Get only selected items
+  List<CartItem> getSelectedItems() {
+    return _cartItems.where((item) => item.isSelected).toList();
+  }
+
   double getSubtotal() {
-    return _cartItems.fold(
-      0.0,
-      (sum, item) => sum + (item.price * item.quantity),
-    );
+    return _cartItems
+        .where((item) => item.isSelected)
+        .fold(0.0, (sum, item) => sum + (item.price * item.quantity));
   }
 
   int getTotalItems() {
-    return _cartItems.fold(0, (sum, item) => sum + item.quantity);
+    return _cartItems
+        .where((item) => item.isSelected)
+        .fold(0, (sum, item) => sum + item.quantity);
   }
 
   double getDiscount() {
@@ -81,9 +94,9 @@ class CartProvider extends ChangeNotifier {
     final url = Uri.parse(
         'https://sip-fresh-backend-new.vercel.app/api/cart/update/$itemId');
 
-      print('[CartProvider] Sending PUT to $url');
-      print('[CartProvider] Request body: {"quantity": $quantity}');
-      print('[CartProvider] Authorization: Bearer $token');
+    print('[CartProvider] Sending PUT to $url');
+    print('[CartProvider] Request body: {"quantity": $quantity}');
+    print('[CartProvider] Authorization: Bearer $token');
 
     try {
       final response = await http.put(
@@ -98,8 +111,7 @@ class CartProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         print('[CartProvider] Quantity updated for item $itemId');
       } else {
-        print(
-            '[CartProvider] Failed to update item $itemId. Status: ${response.statusCode}');
+        print('[CartProvider] Failed to update item $itemId. Status: ${response.statusCode}');
       }
     } catch (e) {
       print('[CartProvider] Error updating quantity: $e');

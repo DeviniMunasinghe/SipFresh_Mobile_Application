@@ -26,24 +26,30 @@ class OrderSummaryTwo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Order Summary", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text(
+              "Order Summary",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const SizedBox(height: 8),
 
             // Display cart items dynamically
-            ...items.map((item) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage(item.imageUrl), 
-                        radius: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(child: Text(item.name)), 
-                      Text("LKR ${item.price.toStringAsFixed(2)}"), 
-                    ],
-                  ),
-                )),
+            ...items.map(
+              (item) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: _getImageProvider(item.imageUrl),
+                      backgroundColor: Colors.grey[200],
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(item.name)),
+                    Text("LKR ${item.price.toStringAsFixed(2)}"),
+                  ],
+                ),
+              ),
+            ),
 
             const Divider(),
 
@@ -78,12 +84,24 @@ class OrderSummaryTwo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text("Total", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                Text("LKR ${total.toStringAsFixed(2)}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(
+                  "LKR ${total.toStringAsFixed(2)}",
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  /// Returns appropriate image provider for asset or network URL
+  ImageProvider _getImageProvider(String imageUrl) {
+    if (imageUrl.startsWith('http')) {
+      return NetworkImage(imageUrl);
+    } else {
+      return AssetImage(imageUrl);
+    }
   }
 }
