@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'profile_screen.dart';
 import 'cart_screen.dart';
 import 'category.dart';
@@ -36,10 +35,16 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+// Add a PageController for controlling the PageView and autoplay timer
+  final PageController _pageController = PageController();
+
+  int _currentPage = 0;
+  late final List<String> _sliderImages;
 
   @override
   void dispose() {
     _searchController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -50,6 +55,31 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     fetchAvailable();
+
+    _sliderImages = [
+      'assets/images/homeImg/SliderImage1.jpg',
+      'assets/images/homeImg/SliderImage2.jpg',
+      'assets/images/homeImg/SliderImage3.jpg',
+    ];
+
+    // Start autoplay timer
+    _startAutoPlay();
+  }
+
+  void _startAutoPlay() {
+    Future.delayed(const Duration(seconds: 3)).then((_) {
+      if (!mounted) return;
+      int nextPage = (_currentPage + 1) % _sliderImages.length;
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      setState(() {
+        _currentPage = nextPage;
+      });
+      _startAutoPlay();
+    });
   }
 
   Future<void> fetchAvailable() async {
@@ -139,32 +169,29 @@ class HomeScreenState extends State<HomeScreen> {
               height: 180,
               child: Stack(
                 children: [
-                  CarouselSlider(
-                    items: [
-                      'assets/images/homeImg/SliderImage1.jpg',
-                      'assets/images/homeImg/SliderImage2.jpg',
-                      'assets/images/homeImg/SliderImage3.jpg',
-                    ].map((imagePath) {
+                  PageView.builder(
+                    controller: _pageController,
+                    itemCount: _sliderImages.length,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemBuilder: (context, index) {
                       return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
-                            image: AssetImage(imagePath),
+                            image: AssetImage(_sliderImages[index]),
                             fit: BoxFit.cover,
                           ),
-                          borderRadius: BorderRadius.circular(12),
                         ),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
                       );
-                    }).toList(),
-                    options: CarouselOptions(
-                      height: 180,
-                      viewportFraction: 1.0,
-                      autoPlay: true,
-                      enlargeCenterPage: false,
-                    ),
+                    },
                   ),
 
-                  // Overlayed Hello Text and Button
+                  // Overlay gradient
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
@@ -212,6 +239,29 @@ class HomeScreenState extends State<HomeScreen> {
                           child: const Text("Buy Now"),
                         ),
                       ],
+                    ),
+                  ),
+
+                  // Optional: Dots Indicator
+                  Positioned(
+                    bottom: 10,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(_sliderImages.length, (index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          width: _currentPage == index ? 12 : 8,
+                          height: _currentPage == index ? 12 : 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _currentPage == index
+                                ? Colors.white
+                                : Colors.white54,
+                          ),
+                        );
+                      }),
                     ),
                   ),
                 ],

@@ -16,13 +16,13 @@ class AdminDashboard extends StatefulWidget {
 class _AdminDashboardState extends State<AdminDashboard> {
   // UI Configuration
   static const Color backgroundColor = Color(0xFF423737);
-  static const Color primaryColor = Color(0xFFFEB711);
+  static const Color primaryColor = Color.fromARGB(255, 174, 156, 115);
   static const Color totalOrdersColor = Color(0xFF81630C);
   static const Color pendingColor = Color(0xFF137386);
   static const Color completedColor = Color(0xFF168308);
   static const Color failedColor = Color(0xFF890303);
   static const Color textColor = Colors.white;
-  static const Color loadingColor = Color(0xFFFEB711);
+  static const Color loadingColor = Color.fromARGB(255, 83, 71, 42);
   static const Color errorColor = Colors.red;
   static const Color noDataColor = Colors.grey;
 
@@ -112,7 +112,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text(dashboardTitle),
-        backgroundColor: primaryColor,
+        backgroundColor: const Color.fromARGB(255, 174, 156, 115),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -142,7 +142,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   ElevatedButton(
                     onPressed: fetchOrderData,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 174, 156, 115),
                     ),
                     child: const Text(retryLabel,
                         style: TextStyle(color: Colors.black)),
@@ -316,7 +316,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 174, 156, 115),
                     ),
                     child: const Text(
                       adminManagementLabel,
@@ -334,7 +334,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 174, 156, 115),
                     ),
                     child: const Text(
                       orderManagementLabel,
@@ -352,7 +352,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
+                      backgroundColor: const Color.fromARGB(255, 174, 156, 115),
                     ),
                     child: const Text(
                       itemManagementLabel,

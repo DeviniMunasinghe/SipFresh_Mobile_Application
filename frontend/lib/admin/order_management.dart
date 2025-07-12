@@ -159,11 +159,13 @@ class OrderManagementPageState extends State<OrderManagementPage> {
     final orderIdInt = int.tryParse(orderId) ?? 0;
 
     dynamic orderDetails = order;
+    List<dynamic> orderItems = [];
     if (orderIdInt > 0) {
       try {
         setState(() => _isLoading = true);
         final response = await http.get(
-          Uri.parse('$baseUrl/order-details/$orderIdInt'),
+          Uri.parse(
+              'https://sip-fresh-backend-new.vercel.app/api/order/order-details/$orderIdInt'),
           headers: headers,
         );
 
@@ -172,7 +174,8 @@ class OrderManagementPageState extends State<OrderManagementPage> {
 
         if (response.statusCode == 200) {
           final decoded = json.decode(response.body);
-          orderDetails = decoded;
+          orderDetails = decoded['orderDetails'] ?? {}; //extract nested
+          orderItems = decoded['orderItems'] ?? []; //extract nested
         }
       } catch (e) {
         print('Error fetching order details: $e');
@@ -194,9 +197,6 @@ class OrderManagementPageState extends State<OrderManagementPage> {
     final discount = _getOrderField(orderDetails, ['discount']);
     final finalTotalPrice = _getOrderField(orderDetails, ['final_total_price']);
     final orderStatus = _getOrderField(orderDetails, ['order_status']);
-
-    // Get order items
-    final orderItems = orderDetails['orderItems'] ?? [];
 
     String currentStatus = orderStatus.toLowerCase();
     if (currentStatus.isEmpty) currentStatus = 'pending';
@@ -420,7 +420,7 @@ class OrderManagementPageState extends State<OrderManagementPage> {
       backgroundColor: const Color(0xFF423737),
       appBar: AppBar(
         title: const Text('Order Management'),
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: Color.fromARGB(255, 83, 71, 42),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

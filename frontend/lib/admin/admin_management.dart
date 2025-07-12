@@ -388,7 +388,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
       backgroundColor: const Color(0xFF423737),
       appBar: AppBar(
         title: const Text('Admin Management'),
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: Color.fromARGB(255, 83, 71, 42),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -398,7 +398,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
       ),
       body: _buildBody(),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: Color.fromARGB(255, 83, 71, 42),
         onPressed: _showAddAdminForm,
         child: const Icon(Icons.add),
       ),
@@ -409,7 +409,8 @@ class AdminManagementPageState extends State<AdminManagementPage> {
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFEB711)),
+          valueColor:
+              AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 83, 71, 42)),
         ),
       );
     }
@@ -436,7 +437,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
               ElevatedButton(
                 onPressed: _loadAdmins,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFEB711),
+                  backgroundColor: Color.fromARGB(255, 83, 71, 42),
                 ),
                 child: const Text('Retry'),
               ),

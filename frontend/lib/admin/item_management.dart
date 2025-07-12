@@ -297,7 +297,7 @@ class ItemManagementPageState extends State<ItemManagementPage> {
       backgroundColor: const Color(0xFF423737),
       appBar: AppBar(
         title: const Text('Item Management'),
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: Color.fromARGB(255, 83, 71, 42),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -351,7 +351,7 @@ class ItemManagementPageState extends State<ItemManagementPage> {
                   },
                 ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: Color.fromARGB(255, 83, 71, 42),
         onPressed: _showAddItemForm,
         child: const Icon(Icons.add),
       ),
