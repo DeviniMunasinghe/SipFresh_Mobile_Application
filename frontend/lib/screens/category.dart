@@ -27,7 +27,8 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
 
   Future<void> fetchJuiceItems() async {
     final url = Uri.parse(
-        'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice');
+      'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice',
+    );
 
     try {
       final response = await http.get(url);
@@ -90,6 +91,7 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
               ProductPrice(price: currentProduct.price),
               const SizedBox(height: 20),
               AddToCartButton(
+                itemId: currentProduct.id, // 🔁 Now sending to backend
                 name: currentProduct.name,
                 price: currentProduct.price,
                 imageUrl: currentProduct.imageUrl,
