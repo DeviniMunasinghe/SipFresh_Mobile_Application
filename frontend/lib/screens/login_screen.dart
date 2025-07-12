@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-// import 'dart:convert';
-// import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../widgets/social_login_button.dart';
 import 'signup_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,27 +54,6 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
 // Mock success: Navigate to BottomNavBar directly
-  void _handleLogin() async {
-    setState(() {
-      _emailTouched = true;
-      _passwordTouched = true;
-    });
-
-    if (_formKey.currentState!.validate()) {
-      // Simulate a delay like real network
-      await Future.delayed(const Duration(seconds: 1));
-
-      // Mock success: Navigate to BottomNavBar directly
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavBar()),
-      );
-    } else {
-      setState(() => _errorMessage = 'Please enter valid email and password');
-    }
-  }
-
-  //backend integration
   // void _handleLogin() async {
   //   setState(() {
   //     _emailTouched = true;
@@ -80,36 +61,68 @@ class LoginScreenState extends State<LoginScreen> {
   //   });
 
   //   if (_formKey.currentState!.validate()) {
-  //     final url =
-  //         Uri.parse('https://sip-fresh-backend-new.vercel.app/api/auth/login');
+  //     // Simulate a delay like real network
+  //     await Future.delayed(const Duration(seconds: 1));
 
-  //     final response = await http.post(
-  //       url,
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: jsonEncode({
-  //         'email': _emailController.text.trim(),
-  //         'password': _passwordController.text.trim(),
-  //       }),
+  //     // Mock success: Navigate to BottomNavBar directly
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const BottomNavBar()),
   //     );
-
-  //     print('Response: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       // Success → Navigate to BottomNavBar
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => const BottomNavBar()),
-  //       );
-  //     } else {
-  //       final error = jsonDecode(response.body)['message'] ?? 'Login failed';
-  //       setState(() {
-  //         _errorMessage = error;
-  //       });
-  //     }
   //   } else {
   //     setState(() => _errorMessage = 'Please enter valid email and password');
   //   }
   // }
+
+  //backend integration
+  void _handleLogin() async {
+    setState(() {
+      _emailTouched = true;
+      _passwordTouched = true;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      final url =
+          Uri.parse('https://sip-fresh-backend-new.vercel.app/api/auth/login');
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': _emailController.text.trim(),
+          'password': _passwordController.text.trim(),
+        }),
+      );
+
+      print('Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+         final responseData = jsonDecode(response.body);
+
+      // ✅ Extract the token
+      final token = responseData['token'];
+      if (token != null) {
+        // ✅ Save it in SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
+        print('[Login] Token saved: $token');
+      }
+        
+        // Success → Navigate to BottomNavBar
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavBar()),
+        );
+      } else {
+        final error = jsonDecode(response.body)['message'] ?? 'Login failed';
+        setState(() {
+          _errorMessage = error;
+        });
+      }
+    } else {
+      setState(() => _errorMessage = 'Please enter valid email and password');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
