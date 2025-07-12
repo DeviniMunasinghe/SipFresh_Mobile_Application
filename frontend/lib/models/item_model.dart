@@ -1,4 +1,3 @@
-
 class Item {
   final int id;
   final String name;
@@ -16,11 +15,11 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      id: json['item_id'],
-      name: json['item_name'],
-      description: json['item_description'],
-      imageUrl: json['item_image'],
-      price: double.parse(json['item_price']),
+      id: json['item_id'] as int,
+      name: json['item_name'] as String,
+      description: json['item_description'] as String,
+      imageUrl: json['item_image'] as String,
+      price: double.tryParse(json['item_price'].toString()) ?? 0.0,
     );
   }
 }
