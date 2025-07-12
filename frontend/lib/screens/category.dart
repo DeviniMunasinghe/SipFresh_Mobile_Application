@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/item_model.dart';
 import '../widgets/product_image.dart';
 import '../widgets/product_description.dart';
 import '../widgets/product_price.dart';
@@ -13,30 +17,47 @@ class JuiceCategoryPage extends StatefulWidget {
 
 class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
   int _currentIndex = 0;
+  List<Item> products = [];
+  bool isLoading = true;
 
-  final List<Map<String, dynamic>> products = [
-    {
-      'name': 'Orange Juice',
-      'image': 'assets/images/juice1.png',
-      'description': 'Fresh and tasty, full of natural sweetness and a splash of vitamin C.',
-      'price': 175.0,
-    },
-    {
-      'name': 'Mango Juice',
-      'image': 'assets/images/juice2.png',
-      'description': 'Packed with tropical flavor and bursting with freshness.',
-      'price': 180.0,
-    },
-    {
-      'name': 'Mixed Fruit Juice',
-      'image': 'assets/images/juice1.png',
-      'description': 'Revitalize your day with this cool and healthy blend.',
-      'price': 165.0,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchJuiceItems();
+  }
+
+  Future<void> fetchJuiceItems() async {
+    final url = Uri.parse(
+        'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice');
+
+    try {
+      final response = await http.get(url);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          products = data.map((json) => Item.fromJson(json)).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load items');
+      }
+    } catch (e) {
+      print('Error fetching items: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final currentProduct = products[_currentIndex];
 
     return Scaffold(
@@ -50,10 +71,10 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
         child: Center(
           child: Column(
             children: [
-              ProductDescription(name: currentProduct['name']),
+              ProductDescription(name: currentProduct.name),
               const SizedBox(height: 12),
               ProductImage(
-                imagePaths: products.map((p) => p['image'] as String).toList(),
+                imagePaths: products.map((p) => p.imageUrl).toList(),
                 onImageChanged: (index) {
                   setState(() {
                     _currentIndex = index;
@@ -62,17 +83,17 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
               ),
               const SizedBox(height: 12),
               Text(
-                currentProduct['description'],
+                currentProduct.description,
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 20),
-              ProductPrice(price: currentProduct['price']),
+              ProductPrice(price: currentProduct.price),
               const SizedBox(height: 20),
               AddToCartButton(
-                name: currentProduct['name'],
-                price: currentProduct['price'],
-                imageUrl: currentProduct['image'],
+                name: currentProduct.name,
+                price: currentProduct.price,
+                imageUrl: currentProduct.imageUrl,
               ),
             ],
           ),
