@@ -1,124 +1,103 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/cart_provider.dart';
-import '../models/cart_item.dart';
+import 'package:http/http.dart' as http;
+import '../models/item_model.dart';
+import '../widgets/product_image.dart';
+import '../widgets/product_description.dart';
+import '../widgets/product_price.dart';
+import '../widgets/add_to_cart_button.dart';
 
 class JuiceCategoryPage extends StatefulWidget {
   const JuiceCategoryPage({super.key});
 
   @override
-  _JuiceCategoryPageState createState() => _JuiceCategoryPageState();
+  State<JuiceCategoryPage> createState() => _JuiceCategoryPageState();
 }
 
 class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
-  final List<Map<String, dynamic>> juiceCategories = [
-    {
-      "name": "Orange Juice",
-      "image": "assets/images/juice1.png",
-      "price": 299.43
-    },
-    {
-      "name": "Apple Juice",
-      "image": "assets/images/juice2.png",
-      "price": 150.99
-    },
-    {
-      "name": "Mango Juice",
-      "image": "assets/images/juice1.png",
-      "price": 320.00
-    },
-    {
-      "name": "Pineapple Juice",
-      "image": "assets/images/juice2.png",
-      "price": 275.00
-    },
-    {
-      "name": "Guava Juice",
-      "image": "assets/images/juice1.png",
-      "price": 250.00
-    },
-    {
-      "name": "Watermelon Juice",
-      "image": "assets/images/juice2.png",
-      "price": 180.00
-    },
-  ];
+  int _currentIndex = 0;
+  List<Item> products = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchJuiceItems();
+  }
+
+  Future<void> fetchJuiceItems() async {
+    final url = Uri.parse(
+      'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice',
+    );
+
+    try {
+      final response = await http.get(url);
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          products = data.map((json) => Item.fromJson(json)).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load items');
+      }
+    } catch (e) {
+      print('Error fetching items: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final currentProduct = products[_currentIndex];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Juice Categories'),
-        backgroundColor: Colors.orange,
+        title: const Text('Fresh Juices'),
+        leading: const BackButton(),
+        backgroundColor: Colors.green.shade400,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.8,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            children: [
+              ProductDescription(name: currentProduct.name),
+              const SizedBox(height: 12),
+              ProductImage(
+                imagePaths: products.map((p) => p.imageUrl).toList(),
+                onImageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+              Text(
+                currentProduct.description,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              ProductPrice(price: currentProduct.price),
+              const SizedBox(height: 20),
+              AddToCartButton(
+                itemId: currentProduct.id, // 🔁 Now sending to backend
+                name: currentProduct.name,
+                price: currentProduct.price,
+                imageUrl: currentProduct.imageUrl,
+              ),
+            ],
           ),
-          itemCount: juiceCategories.length,
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    juiceCategories[index]["image"]!,
-                    height: 80,
-                    width: 80,
-                    fit: BoxFit.cover,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    juiceCategories[index]["name"]!,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "\$${juiceCategories[index]["price"].toStringAsFixed(2)}",
-                    style: const TextStyle(fontSize: 14, color: Colors.green),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                    ),
-                    onPressed: () {
-                      Provider.of<CartProvider>(context, listen: false)
-                          .addToCart(
-                        CartItem(
-                          name: juiceCategories[index]["name"]!,
-                          price: juiceCategories[index]["price"],
-                          quantity: 1,
-                          imageUrl: juiceCategories[index]["image"]!,
-                        ),
-                      );
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              "${juiceCategories[index]['name']} added to cart!"),
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
-                    },
-                    child: const Text("Add to Cart"),
-                  ),
-                ],
-              ),
-            );
-          },
         ),
       ),
     );

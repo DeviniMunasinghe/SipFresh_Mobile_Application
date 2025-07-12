@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../widgets/social_login_button.dart';
 import 'login_screen.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -20,21 +22,123 @@ class SignUpScreenState extends State<SignUpScreen> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+
+  final GlobalKey<FormFieldState> _passwordFieldKey =
+      GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _confirmPasswordFieldKey =
+      GlobalKey<FormFieldState>();
+
+  final GlobalKey<FormFieldState> _emailFieldKey = GlobalKey<FormFieldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        // When email field loses focus, validate it
+        _emailFieldKey.currentState?.validate();
+      }
+    });
+
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        _passwordFieldKey.currentState?.validate();
+      }
+    });
+
+    _confirmPasswordFocusNode.addListener(() {
+      if (!_confirmPasswordFocusNode.hasFocus) {
+        _confirmPasswordFieldKey.currentState?.validate();
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
   }
 
-  void _handleSignUp() {
+  //mock success
+  // void _handleSignUp() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     // Simulate delay like real network call
+  //     await Future.delayed(const Duration(seconds: 1));
+
+  //     // Navigate to BottomNavBar directly
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const BottomNavBar()),
+  //     );
+  //   }
+  // }
+
+//backend integration
+  void _handleSignUp() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavBar()),
-      );
+      final url = Uri.parse(
+          'https://sip-fresh-backend-new.vercel.app/api/auth/register');
+
+      try {
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'username':
+                'SipFreshUser', // you can add a username field if needed
+            'email': _emailController.text.trim(),
+            'password': _passwordController.text.trim(),
+            'confirmPassword': _confirmPasswordController.text.trim(),
+          }),
+        );
+
+        // print the response from the backend
+        // ignore: avoid_print
+        print('Response: ${response.body}');
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          // Success: Navigate to BottomNavBar
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(builder: (context) => const BottomNavBar()),
+          );
+        } else {
+          // Show error message from backend
+          final Map<String, dynamic> resBody = jsonDecode(response.body);
+          final errorMessage = resBody['message'] ?? 'Registration failed';
+          _showErrorDialog(errorMessage);
+        }
+      } catch (e) {
+        _showErrorDialog('Failed to connect. Please try again later.');
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () => Navigator.of(ctx).pop(),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -53,7 +157,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.disabled,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
@@ -74,6 +178,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _emailFieldKey,
+              focusNode: _emailFocusNode,
               controller: _emailController,
               decoration: InputDecoration(
                 hintText: "Type your email",
@@ -104,6 +210,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _passwordFieldKey,
+              focusNode: _passwordFocusNode,
               controller: _passwordController,
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
@@ -145,6 +253,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _confirmPasswordFieldKey,
+              focusNode: _confirmPasswordFocusNode,
               controller: _confirmPasswordController,
               obscureText: !_isConfirmPasswordVisible,
               decoration: InputDecoration(

@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.green[200],
+        backgroundColor: const Color(0xFF82BA53),
       ),
       body: Text(
         "Welcome to My Profile",
