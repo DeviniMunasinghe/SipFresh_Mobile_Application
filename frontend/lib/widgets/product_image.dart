@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class ProductImage extends StatefulWidget {
   final List<String> imagePaths;
-  final ValueChanged<int>? onImageChanged; // <-- callback
+  final ValueChanged<int>? onImageChanged;
 
   const ProductImage({
     super.key,
     required this.imagePaths,
-    this.onImageChanged, // <-- optional
+    this.onImageChanged,
   });
 
   @override
@@ -65,7 +65,6 @@ class _ProductImageState extends State<ProductImage> {
                 _currentIndex = index;
               });
 
-              // Notify parent if callback is provided
               if (widget.onImageChanged != null) {
                 widget.onImageChanged!(index);
               }
@@ -75,30 +74,39 @@ class _ProductImageState extends State<ProductImage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
+                  child: Image.network(
                     widget.imagePaths[index],
                     fit: BoxFit.cover,
                     width: double.infinity,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(child: Text('Image not available'));
+                    },
                   ),
                 ),
               );
             },
           ),
         ),
-        Positioned(
-          left: 8,
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.green, size: 30),
-            onPressed: _previousPage,
+        if (widget.imagePaths.length > 1)
+          Positioned(
+            left: 8,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.green, size: 30),
+              onPressed: _previousPage,
+            ),
           ),
-        ),
-        Positioned(
-          right: 8,
-          child: IconButton(
-            icon: const Icon(Icons.arrow_forward_ios, color: Colors.green, size: 30),
-            onPressed: _nextPage,
+        if (widget.imagePaths.length > 1)
+          Positioned(
+            right: 8,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios, color: Colors.green, size: 30),
+              onPressed: _nextPage,
+            ),
           ),
-        ),
       ],
     );
   }

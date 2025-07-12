@@ -29,10 +29,16 @@ class AddToCartButton extends StatelessWidget {
             imageUrl: imageUrl,
           );
 
+          // Add to cart via provider
           Provider.of<CartProvider>(context, listen: false).addToCart(newItem);
 
+          // Show confirmation
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Added to Cart')),
+            SnackBar(
+              content: Text('Added "$name" to Cart'),
+              duration: const Duration(seconds: 2),
+              backgroundColor: Colors.green.shade600,
+            ),
           );
         },
         style: ElevatedButton.styleFrom(
@@ -41,7 +47,10 @@ class AddToCartButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: const Text('Add to Cart'),
+        child: const Text(
+          'Add to Cart',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }
