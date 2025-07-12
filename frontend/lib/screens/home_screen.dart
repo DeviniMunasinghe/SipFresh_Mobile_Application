@@ -5,6 +5,8 @@ import 'cart_screen.dart';
 import 'category.dart';
 import '../widgets/juice_card.dart';
 import '../widgets/category_card.dart';
+import '../services/api_service.dart';
+import '../screens/see_all_items_screen.dart';
 
 // cateogory list
 final List<Map<String, dynamic>> categories = [
@@ -39,6 +41,30 @@ class HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  List<Map<String, dynamic>> availableItems = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAvailable();
+  }
+
+  Future<void> fetchAvailable() async {
+    try {
+      final allItems = await ApiService.fetchAllItems();
+      setState(() {
+        availableItems = allItems.take(5).toList(); // Get only first 5 items
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -195,24 +221,34 @@ class HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
 
             // Available Today
-            sectionHeader("Available Today"),
+            sectionHeader("Available Today", onSeeAll: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SeeAllItemsScreen()),
+              );
+            }),
             const SizedBox(height: 8),
             SizedBox(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5,
-                itemBuilder: (_, index) => JuiceCardWidget(
-                  imagePath: "assets/images/juice1.png",
-                  key: ValueKey(index),
-                  title: 'Mix Fruit Juice',
-                  price: 170.00,
-                  onTap: () {
-                    // Optional: handle click
-                  },
-                ),
-              ),
+              height: 240,
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: availableItems.length,
+                      itemBuilder: (_, index) {
+                        final item = availableItems[index];
+                        return JuiceCardWidget(
+                          imagePath: item['item_image'] ??
+                              '', // fallback to empty string if null
+                          title: item['item_name'] ?? '',
+                          price: double.tryParse(
+                                  item['item_price']?.toString() ?? '0.0') ??
+                              0.0,
+                        );
+                      },
+                    ),
             ),
+
             const SizedBox(height: 24),
 
             // Categories
@@ -249,13 +285,16 @@ class HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget sectionHeader(String title) {
+  Widget sectionHeader(String title, {VoidCallback? onSeeAll}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const Text("See all", style: TextStyle(color: Colors.green)),
+        GestureDetector(
+          onTap: onSeeAll,
+          child: const Text("See all", style: TextStyle(color: Colors.green)),
+        ),
       ],
     );
   }
