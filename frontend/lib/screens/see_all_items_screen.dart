@@ -74,6 +74,7 @@ class _SeeAllItemsScreenState extends State<SeeAllItemsScreen> {
                   price: double.tryParse(
                           item['item_price']?.toString() ?? '0.0') ??
                       0.0,
+                  itemId: item['item_id'],
                   imageHeight: 180, // custom height only for this screen
                 );
               },
