@@ -7,12 +7,14 @@ class JuiceCardWidget extends StatelessWidget {
   final double price;
   final VoidCallback? onTap;
   final double imageHeight;
+  final int itemId;
 
   const JuiceCardWidget({
     super.key,
     required this.imagePath,
     required this.title,
     required this.price,
+    required this.itemId,
     this.onTap,
     this.imageHeight = 100, // default height
   });
@@ -88,6 +90,7 @@ class JuiceCardWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: AddToCartButton(
+                itemId: itemId, // pass the required item ID
                 name: title,
                 price: price,
                 imageUrl: imagePath,
