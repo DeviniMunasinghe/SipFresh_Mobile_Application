@@ -104,7 +104,7 @@ class SignUpScreenState extends State<SignUpScreen> {
 
         // print the response from the backend
         // ignore: avoid_print
-        print('Response: ${response.body}');
+        // print('Response: ${response.body}');
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           // Success: Navigate to BottomNavBar

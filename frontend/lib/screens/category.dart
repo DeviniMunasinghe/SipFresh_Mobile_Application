@@ -6,9 +6,12 @@ import '../widgets/product_image.dart';
 import '../widgets/product_description.dart';
 import '../widgets/product_price.dart';
 import '../widgets/add_to_cart_button.dart';
+import '../screens/home_screen.dart';
 
 class JuiceCategoryPage extends StatefulWidget {
-  const JuiceCategoryPage({super.key});
+  final String categoryName;
+
+  const JuiceCategoryPage({super.key, required this.categoryName});
 
   @override
   State<JuiceCategoryPage> createState() => _JuiceCategoryPageState();
@@ -27,14 +30,14 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
 
   Future<void> fetchJuiceItems() async {
     final url = Uri.parse(
-      'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice',
+      'https://sip-fresh-backend-new.vercel.app/api/items/category/${Uri.encodeComponent(widget.categoryName)}',
     );
 
     try {
       final response = await http.get(url);
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -46,7 +49,10 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
         throw Exception('Failed to load items');
       }
     } catch (e) {
-      print('Error fetching items: $e');
+      // print('Error fetching items: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -62,8 +68,18 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fresh Juices'),
-        leading: const BackButton(),
+        title: Text(widget.categoryName),
+        // leading: const BackButton(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
+        ),
+
         backgroundColor: Colors.green.shade400,
       ),
       body: Padding(
@@ -109,7 +125,9 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
                   ],
                 ),
               ),
+
             ),
+
           ),
         ),
       ),
