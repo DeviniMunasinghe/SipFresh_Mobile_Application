@@ -1,5 +1,5 @@
-// widgets/category_card.dart
 import 'package:flutter/material.dart';
+import 'bottom_nav_bar.dart';
 
 class CategoryCard extends StatelessWidget {
   final String title;
@@ -36,7 +36,14 @@ class CategoryCard extends StatelessWidget {
           const SizedBox(height: 10),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            onPressed: onPressed,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BottomNavBar(selectedCategory: title),
+                ),
+              );
+            },
             child: const Text("See More", style: TextStyle(fontSize: 16)),
           ),
           const SizedBox(height: 10),

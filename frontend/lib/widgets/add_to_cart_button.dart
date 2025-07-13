@@ -88,9 +88,9 @@ class AddToCartButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
+    return Center(
+      // width: double.infinity,
+      // height: 48,
       child: ElevatedButton(
         onPressed: () => _sendToBackend(context),
         style: ElevatedButton.styleFrom(

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import '../models/item_model.dart';
 import '../widgets/product_image.dart';
 import '../widgets/product_description.dart';
@@ -9,7 +8,9 @@ import '../widgets/product_price.dart';
 import '../widgets/add_to_cart_button.dart';
 
 class JuiceCategoryPage extends StatefulWidget {
-  const JuiceCategoryPage({super.key});
+  final String categoryName;
+
+  const JuiceCategoryPage({super.key, required this.categoryName});
 
   @override
   State<JuiceCategoryPage> createState() => _JuiceCategoryPageState();
@@ -28,7 +29,7 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
 
   Future<void> fetchJuiceItems() async {
     final url = Uri.parse(
-      'https://sip-fresh-backend-new.vercel.app/api/items/category/Fruit Juice',
+      'https://sip-fresh-backend-new.vercel.app/api/items/category/${Uri.encodeComponent(widget.categoryName)}',
     );
 
     try {
@@ -48,6 +49,9 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
       }
     } catch (e) {
       print('Error fetching items: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -63,7 +67,7 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fresh Juices'),
+        title: Text(widget.categoryName),
         leading: const BackButton(),
         backgroundColor: Colors.green.shade400,
       ),
@@ -92,7 +96,7 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
               ProductPrice(price: currentProduct.price),
               const SizedBox(height: 20),
               AddToCartButton(
-                itemId: currentProduct.id, // 🔁 Now sending to backend
+                itemId: currentProduct.id, // Now sending to backend
                 name: currentProduct.name,
                 price: currentProduct.price,
                 imageUrl: currentProduct.imageUrl,

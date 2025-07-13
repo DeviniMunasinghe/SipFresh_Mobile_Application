@@ -22,11 +22,50 @@ class SignUpScreenState extends State<SignUpScreen> {
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
 
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+
+  final GlobalKey<FormFieldState> _passwordFieldKey =
+      GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _confirmPasswordFieldKey =
+      GlobalKey<FormFieldState>();
+
+  final GlobalKey<FormFieldState> _emailFieldKey = GlobalKey<FormFieldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        // When email field loses focus, validate it
+        _emailFieldKey.currentState?.validate();
+      }
+    });
+
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        _passwordFieldKey.currentState?.validate();
+      }
+    });
+
+    _confirmPasswordFocusNode.addListener(() {
+      if (!_confirmPasswordFocusNode.hasFocus) {
+        _confirmPasswordFieldKey.currentState?.validate();
+      }
+    });
+  }
+
   @override
   void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
   }
 
@@ -63,7 +102,7 @@ class SignUpScreenState extends State<SignUpScreen> {
           }),
         );
 
-        // 👇 Add this line to print the response from the backend
+        // print the response from the backend
         // ignore: avoid_print
         print('Response: ${response.body}');
 
@@ -118,7 +157,7 @@ class SignUpScreenState extends State<SignUpScreen> {
       ),
       body: Form(
         key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        autovalidateMode: AutovalidateMode.disabled,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
@@ -139,6 +178,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _emailFieldKey,
+              focusNode: _emailFocusNode,
               controller: _emailController,
               decoration: InputDecoration(
                 hintText: "Type your email",
@@ -169,6 +210,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _passwordFieldKey,
+              focusNode: _passwordFocusNode,
               controller: _passwordController,
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
@@ -210,6 +253,8 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 5),
             TextFormField(
+              key: _confirmPasswordFieldKey,
+              focusNode: _confirmPasswordFocusNode,
               controller: _confirmPasswordController,
               obscureText: !_isConfirmPasswordVisible,
               decoration: InputDecoration(

@@ -5,7 +5,9 @@ import '../screens/profile_screen.dart';
 import '../screens/category.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+  final String? selectedCategory; //  add this
+
+  const BottomNavBar({super.key, this.selectedCategory});
 
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
@@ -13,15 +15,23 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
+  late List<Widget> _pages;
 
-  // List of pages for navigation
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    JuiceCategoryPage(),
-    const CartScreen(),
-    const ProfileScreen()
-    // const Center(child: Text("Profile Page")),
-  ];
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.selectedCategory != null) {
+      _selectedIndex = 1; // jump to Categories tab
+    }
+
+    _pages = [
+      const HomeScreen(),
+      JuiceCategoryPage(categoryName: widget.selectedCategory ?? 'Fruit Juice'),
+      const CartScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
