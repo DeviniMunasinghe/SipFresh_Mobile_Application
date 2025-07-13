@@ -13,17 +13,14 @@ final List<Map<String, dynamic>> categories = [
   {
     'title': 'Fruit Juice',
     'imagePath': 'assets/images/categoryImg/Fruit Juice.jpg',
-    'screen': const JuiceCategoryPage(),
   },
   {
     'title': 'Smoothies',
     'imagePath': 'assets/images/categoryImg/Smoothies.jpg',
-    'screen': const JuiceCategoryPage(),
   },
   {
     'title': 'Wellness Drinks',
     'imagePath': 'assets/images/categoryImg/Wellness Drinks.jpg',
-    'screen': const JuiceCategoryPage(),
   },
 ];
 
@@ -271,7 +268,10 @@ class HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => category['screen'] as Widget,
+                            builder: (_) => JuiceCategoryPage(
+                              categoryName:
+                                  category['title'], // Pass title as category
+                            ),
                           ),
                         );
                       },
