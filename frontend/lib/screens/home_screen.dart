@@ -87,7 +87,7 @@ class HomeScreenState extends State<HomeScreen> {
         isLoading = false;
       });
     } catch (e) {
-      print('Error: $e');
+      // print('Error: $e');
       setState(() {
         isLoading = false;
       });

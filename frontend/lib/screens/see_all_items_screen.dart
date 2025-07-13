@@ -30,7 +30,7 @@ class _SeeAllItemsScreenState extends State<SeeAllItemsScreen> {
         isLoading = false;
       });
     } catch (e) {
-      print("Error: $e");
+      // print("Error: $e");
       setState(() {
         isLoading = false;
       });

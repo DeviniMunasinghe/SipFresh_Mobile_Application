@@ -35,8 +35,8 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
     try {
       final response = await http.get(url);
 
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response status: ${response.statusCode}');
+      // print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -48,7 +48,7 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
         throw Exception('Failed to load items');
       }
     } catch (e) {
-      print('Error fetching items: $e');
+      // print('Error fetching items: $e');
       setState(() {
         isLoading = false;
       });

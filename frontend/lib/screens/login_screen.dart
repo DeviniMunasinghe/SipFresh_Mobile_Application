@@ -95,7 +95,7 @@ class LoginScreenState extends State<LoginScreen> {
         }),
       );
 
-      print('Response: ${response.body}');
+      // print('Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
@@ -106,7 +106,7 @@ class LoginScreenState extends State<LoginScreen> {
           // ✅ Save it in SharedPreferences
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', token);
-          print('[Login] Token saved: $token');
+          // print('[Login] Token saved: $token');
         }
 
         // Extract user role from response data
