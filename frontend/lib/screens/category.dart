@@ -6,6 +6,7 @@ import '../widgets/product_image.dart';
 import '../widgets/product_description.dart';
 import '../widgets/product_price.dart';
 import '../widgets/add_to_cart_button.dart';
+import '../screens/home_screen.dart';
 
 class JuiceCategoryPage extends StatefulWidget {
   final String categoryName;
@@ -68,7 +69,17 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.categoryName),
-        leading: const BackButton(),
+        // leading: const BackButton(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
+        ),
+
         backgroundColor: Colors.green.shade400,
       ),
       body: Padding(
