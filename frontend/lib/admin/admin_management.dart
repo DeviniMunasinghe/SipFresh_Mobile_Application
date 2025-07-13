@@ -196,7 +196,7 @@ class AdminApiService {
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
 
-      print('Add admin response status: ${response.statusCode}');
+      //print('Add admin response status: ${response.statusCode}');
       print('Add admin response body: $responseBody');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -281,7 +281,7 @@ class AdminApiService {
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
 
-      print('Update admin response status: ${response.statusCode}');
+      //print('Update admin response status: ${response.statusCode}');
       print('Update admin response body: $responseBody');
 
       if (response.statusCode == 200) {
@@ -317,7 +317,7 @@ class AdminApiService {
         },
       );
 
-      print('Delete admin response status: ${response.statusCode}');
+      // print('Delete admin response status: ${response.statusCode}');
       print('Delete admin response body: ${response.body}');
 
       if (response.statusCode == 200) {
@@ -425,7 +425,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
               Icon(
                 Icons.error_outline,
                 size: 64,
-                color: Colors.red[300],
+                color: const Color.fromARGB(255, 63, 138, 83),
               ),
               const SizedBox(height: 16),
               Text(
@@ -676,15 +676,14 @@ class AdminManagementPageState extends State<AdminManagementPage> {
                     final response = await AdminApiService.updateAdmin(
                         updatedAdmin, selectedImage);
                     if (response['status'] == 'success') {
-                      Navigator.of(context).pop();
-                      _loadAdmins();
+                      Navigator.of(context).pop(); // Close dialog first
+                      await _loadAdmins(); // Then refresh the list
                       _showSuccessMessage('Admin updated successfully');
                     } else {
-                      _showErrorMessage(
-                          'Failed to update admin: ${response['message']}');
+                      _showErrorMessage('Status: ${response['message']}');
                     }
                   } catch (e) {
-                    _showErrorMessage('Failed to update admin: $e');
+                    _showErrorMessage('Status: $e');
                   }
                 },
                 child: const Text('Save'),
@@ -712,10 +711,11 @@ class AdminManagementPageState extends State<AdminManagementPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-                await _deleteAdmin(admin);
+                Navigator.of(context).pop(); // Close dialog first
+                await _deleteAdmin(admin); // Then perform delete
               },
-              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+              child: const Text('Delete',
+                  style: TextStyle(color: Color.fromARGB(255, 60, 244, 54))),
             ),
           ],
         );
@@ -727,13 +727,13 @@ class AdminManagementPageState extends State<AdminManagementPage> {
     try {
       final response = await AdminApiService.deleteAdmin(admin.userId!);
       if (response['status'] == 'success') {
-        _loadAdmins();
+        await _loadAdmins(); // Refresh the list
         _showSuccessMessage('Admin deleted successfully');
       } else {
-        _showErrorMessage('Failed to delete admin: ${response['message']}');
+        _showErrorMessage('Status: ${response['message']}');
       }
     } catch (e) {
-      _showErrorMessage('Failed to delete admin: $e');
+      _showErrorMessage('Status: $e');
     }
   }
 
@@ -877,15 +877,14 @@ class AdminManagementPageState extends State<AdminManagementPage> {
                           final response = await AdminApiService.addAdmin(
                               newAdmin, selectedImage);
                           if (response['status'] == 'success') {
-                            Navigator.of(context).pop();
-                            _loadAdmins();
+                            Navigator.of(context).pop(); // Close dialog first
+                            await _loadAdmins(); // Then refresh the list
                             _showSuccessMessage('Admin added successfully');
                           } else {
-                            _showErrorMessage(
-                                'Failed to add admin: ${response['message']}');
+                            _showErrorMessage('Status: ${response['message']}');
                           }
                         } catch (e) {
-                          _showErrorMessage('Failed to add admin: $e');
+                          _showErrorMessage('Status: $e');
                         } finally {
                           setStateSB(() {
                             isSubmitting = false;
@@ -963,7 +962,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color.fromARGB(255, 68, 107, 34),
         duration: const Duration(seconds: 5),
       ),
     );

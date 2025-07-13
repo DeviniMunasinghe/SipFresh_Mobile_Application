@@ -174,8 +174,8 @@ class OrderManagementPageState extends State<OrderManagementPage> {
 
         if (response.statusCode == 200) {
           final decoded = json.decode(response.body);
-          orderDetails = decoded['orderDetails'] ?? {}; //extract nested
-          orderItems = decoded['orderItems'] ?? []; //extract nested
+          orderDetails = decoded['orderDetails'] ?? {}; // ✅ fix here
+          orderItems = decoded['orderItems'] ?? []; // ✅ fix here
         }
       } catch (e) {
         print('Error fetching order details: $e');
@@ -198,6 +198,9 @@ class OrderManagementPageState extends State<OrderManagementPage> {
     final finalTotalPrice = _getOrderField(orderDetails, ['final_total_price']);
     final orderStatus = _getOrderField(orderDetails, ['order_status']);
 
+    // Get order items
+    // final orderItems = orderDetails['orderItems'] ?? [];
+
     String currentStatus = orderStatus.toLowerCase();
     if (currentStatus.isEmpty) currentStatus = 'pending';
 
@@ -205,7 +208,7 @@ class OrderManagementPageState extends State<OrderManagementPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: Text('Order #$displayOrderId Details'),
+          title: Text('Order 0$displayOrderId Details'),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +409,7 @@ class OrderManagementPageState extends State<OrderManagementPage> {
     switch (status.toLowerCase()) {
       case 'successful':
         return Colors.green;
-      case 'canceled':
+      case 'failed':
         return Colors.red;
       case 'pending':
       default:
@@ -420,7 +423,7 @@ class OrderManagementPageState extends State<OrderManagementPage> {
       backgroundColor: const Color(0xFF423737),
       appBar: AppBar(
         title: const Text('Order Management'),
-        backgroundColor: Color.fromARGB(255, 83, 71, 42),
+        backgroundColor: const Color(0xFFFEB711),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -469,7 +472,7 @@ class OrderManagementPageState extends State<OrderManagementPage> {
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(12),
                           title: Text(
-                            'Order #$displayOrderId',
+                            'Order 0$displayOrderId',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
