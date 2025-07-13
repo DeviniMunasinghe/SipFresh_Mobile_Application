@@ -174,8 +174,8 @@ class OrderManagementPageState extends State<OrderManagementPage> {
 
         if (response.statusCode == 200) {
           final decoded = json.decode(response.body);
-          orderDetails = decoded['orderDetails'] ?? {}; // ✅ fix here
-          orderItems = decoded['orderItems'] ?? []; // ✅ fix here
+          orderDetails = decoded['orderDetails'] ?? {};
+          orderItems = decoded['orderItems'] ?? [];
         }
       } catch (e) {
         print('Error fetching order details: $e');
@@ -420,10 +420,10 @@ class OrderManagementPageState extends State<OrderManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF423737),
+      backgroundColor: Color(0xFFE2EEED),
       appBar: AppBar(
         title: const Text('Order Management'),
-        backgroundColor: const Color(0xFFFEB711),
+        backgroundColor: const Color.fromARGB(255, 174, 156, 115),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

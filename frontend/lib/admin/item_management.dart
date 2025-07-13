@@ -294,10 +294,10 @@ class ItemManagementPageState extends State<ItemManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF423737),
+      backgroundColor: Color(0xFFE2EEED),
       appBar: AppBar(
         title: const Text('Item Management'),
-        backgroundColor: Color.fromARGB(255, 83, 71, 42),
+        backgroundColor: const Color.fromARGB(255, 174, 156, 115),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

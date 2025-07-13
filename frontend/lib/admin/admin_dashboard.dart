@@ -15,13 +15,13 @@ class AdminDashboard extends StatefulWidget {
 
 class _AdminDashboardState extends State<AdminDashboard> {
   // UI Configuration
-  static const Color backgroundColor = Color(0xFF423737);
-  static const Color primaryColor = Color.fromARGB(255, 174, 156, 115);
-  static const Color totalOrdersColor = Color(0xFF81630C);
-  static const Color pendingColor = Color(0xFF137386);
-  static const Color completedColor = Color(0xFF168308);
-  static const Color failedColor = Color(0xFF890303);
-  static const Color textColor = Colors.white;
+  static const Color backgroundColor = Color(0xFFE2EEED);
+  // static const Color primaryColor = Color.fromARGB(255, 174, 156, 115);
+  static const Color totalOrdersColor = Color(0xFF5C6BC0); //Color(0xFF82BA53);
+  static const Color pendingColor = Color(0xFFFFD54F); //Color(0xFF6CA9A3);
+  static const Color completedColor = Color(0xFF81C784); //Color(0xFFFFDB58);
+  static const Color failedColor = Color(0xFFE57373); //Color(0xFFD94D4D);
+  static const Color textColor = Colors.black;
   static const Color loadingColor = Color.fromARGB(255, 83, 71, 42);
   static const Color errorColor = Colors.red;
   static const Color noDataColor = Colors.grey;

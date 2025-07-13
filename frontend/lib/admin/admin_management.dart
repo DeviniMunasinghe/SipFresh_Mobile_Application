@@ -385,10 +385,10 @@ class AdminManagementPageState extends State<AdminManagementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF423737),
+      backgroundColor: Color(0xFFE2EEED),
       appBar: AppBar(
         title: const Text('Admin Management'),
-        backgroundColor: Color.fromARGB(255, 83, 71, 42),
+        backgroundColor: const Color.fromARGB(255, 174, 156, 115),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -469,6 +469,7 @@ class AdminManagementPageState extends State<AdminManagementPage> {
       itemBuilder: (context, index) {
         final admin = admins[index];
         return Card(
+          color: Color(0xFFF5F5F5),
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: ListTile(
             leading: _buildAvatar(admin.userImage),
