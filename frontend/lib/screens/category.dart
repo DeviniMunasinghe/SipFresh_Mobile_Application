@@ -69,34 +69,47 @@ class _JuiceCategoryPageState extends State<JuiceCategoryPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Center(
-          child: Column(
-            children: [
-              ProductDescription(name: currentProduct.name),
-              const SizedBox(height: 12),
-              ProductImage(
-                imagePaths: products.map((p) => p.imageUrl).toList(),
-                onImageChanged: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.85, // narrower card width
+            child: Card(
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(height: 12),
-              Text(
-                currentProduct.description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ProductDescription(name: currentProduct.name),
+                    const SizedBox(height: 12),
+                    ProductImage(
+                      imagePaths: products.map((p) => p.imageUrl).toList(),
+                      onImageChanged: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      currentProduct.description,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 20),
+                    ProductPrice(price: currentProduct.price),
+                    const SizedBox(height: 20),
+                    AddToCartButton(
+                      itemId: currentProduct.id,
+                      name: currentProduct.name,
+                      price: currentProduct.price,
+                      imageUrl: currentProduct.imageUrl,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              ProductPrice(price: currentProduct.price),
-              const SizedBox(height: 20),
-              AddToCartButton(
-                itemId: currentProduct.id, // 🔁 Now sending to backend
-                name: currentProduct.name,
-                price: currentProduct.price,
-                imageUrl: currentProduct.imageUrl,
-              ),
-            ],
+            ),
           ),
         ),
       ),
